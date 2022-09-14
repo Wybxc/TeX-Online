@@ -1,8 +1,6 @@
 \documentclass{article}
-\usepackage[utf8]{inputenc}
 \usepackage{ctex}
-\usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{amsmath, amsfonts, amssymb}
 \usepackage{geometry}
 \usepackage{IEEEtrantools}
 \special{dvipdfmx:config z 0} % delete this when release
@@ -27,5 +25,9 @@
 正文正文正文
 
 正文正文正文
+
+\begin{equation*}
+    f(x) = \int_{-\infty}^\infty  \hat f(x)\xi\,e^{2 \pi i \xi x}  \,\mathrm{d}\xi 
+\end{equation*}
 
 \end{document}

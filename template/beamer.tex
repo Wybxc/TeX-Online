@@ -1,0 +1,48 @@
+\documentclass{ctexbeamer}
+\usetheme{Dresden}
+\usecolortheme{spruce}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{IEEEtrantools}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\title{Title}
+\author{Author}
+\date{Date}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\newcommand{\ftitle}[1]{\frametitle{\hspace{4ex} {#1}}}
+
+\usefonttheme{professionalfonts}
+\everymath{\displaystyle}
+\linespread{1.5}
+
+\begin{document}
+
+\begin{frame}    
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{目录}
+    \tableofcontents[currentsection, currentsubsection]
+\end{frame}
+
+\section{Frame 1}
+\begin{frame}
+    \ftitle{Frame 1}
+
+    正文正文正文
+
+    \begin{equation*}
+        f(x) = \int_{-\infty}^\infty  \hat f(x)\xi\,e^{2 \pi i \xi x}  \,\mathrm{d}\xi 
+    \end{equation*}
+
+    正文正文正文
+    
+    正文正文正文
+
+\end{frame}
+
+\end{document}
