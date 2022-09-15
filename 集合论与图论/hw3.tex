@@ -1,0 +1,92 @@
+\documentclass{ctexart}
+\usepackage{multicol}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{集合论与图论~作业3}
+\author{庄嘉毅}
+\date{September 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+\linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\section*{习题一}
+\paragraph*{3} 确定下面的包含和属于关系是否正确.
+
+\begin{multicols}{2}
+    \subparagraph*{(1)} $\varnothing \subseteq \varnothing$ 正确;
+    \subparagraph*{(2)} $\varnothing \subset \varnothing$ 错误;
+    \subparagraph*{(3)} $\varnothing \in \varnothing$ 错误;
+    \subparagraph*{(4)} $\varnothing \in \{\varnothing\}$ 正确;
+    \subparagraph*{(5)} $\varnothing \subseteq \{\varnothing\}$ 正确;
+    \subparagraph*{(6)} $\varnothing \in \{\varnothing\}$且$\varnothing \subseteq \{\varnothing\}$ 正确;
+    \subparagraph*{(7)} $\{\varnothing\} \in \{\varnothing\}$且$\{\varnothing\} \subseteq \{\varnothing\}$ 错误;
+    \subparagraph*{(8)} $A$为任一集合,则$\varnothing\subseteq P(A)$且$\varnothing\in P(A)$ 正确;
+    \subparagraph*{(9)} $\{a,b\}\subseteq\{a,b,\{a,b\}\}$ 正确;
+    \subparagraph*{(10)} $\{a,b\}\in\{a,b,\{a,b,c\}\}$ 错误;
+    \subparagraph*{(11)} $\{a,b\}\in\{a,b,\{\{a,b\}\}\}$ 错误;
+\end{multicols}
+
+\paragraph*{10} 设$A=\{a\}$,判断下列的包含与属于关系是否正确.
+
+\begin{multicols}{2}
+    \subparagraph*{(1)} $\{\varnothing\} \in PP(A)$ 正确;
+    \subparagraph*{(2)} $\{\varnothing\} \subseteq PP(A)$ 正确;
+    \subparagraph*{(3)} $\{\varnothing,\{\varnothing\}\} \in PP(A)$ 错误;
+    \subparagraph*{(4)} $\{\varnothing,\{\varnothing\}\} \subseteq PP(A)$ 正确;
+    \subparagraph*{(5)} $\{\varnothing,\{a\}\} \in PP(A)$ 正确;
+    \subparagraph*{(6)} $\{\varnothing,\{a\}\} \subseteq PP(A)$ 错误;
+\end{multicols}
+
+\paragraph*{13} 设$A,B,C$为任意三个集合.
+
+\subparagraph*{(1)} 证明: 任取$a\in(A-B)-C$, 有$a\in A$且$a\notin B$且$a\notin C$. 由$a\notin B$知$a\notin B-C$, 结合$a\in A$得出$a\in A-(B-C)$. \QED
+\subparagraph*{(2)} 由证明过程知,$(A-B)-C=A-(B-C)$当且仅当$\forall a\in A, (a\notin B \wedge a\notin C)\leftrightarrow a\notin B-C$, 即$\forall a\in A, (a\in B \vee a\in C) \leftrightarrow (a\in B\wedge a\notin C)$, 化简知其等价于 $\forall a\in A, a\notin C$, 即$A\cap C=\varnothing$. 
+
+\paragraph*{14} 证明:
+\begin{align*}
+    B&=B\cap E\\
+    &=B\cap (A\cup \mathord{\sim} A)\\
+    &=(A\cap B)\cup (\mathord{\sim} A\cap B)\\
+    &=(A\cap C)\cup (\mathord{\sim} A\cap C)\\
+    &=C\cup (\mathord{\sim} A\cap A)\\
+    &=C\cup E\\
+    &=C    
+\end{align*}
+\QED
+
+\paragraph*{16} 化简下列集合.
+
+\subparagraph*{(1)} $\cup\{ \{3,4\}, \{ \{3\},\{4\} \}, \{ 3,\{4\} \}, \{ \{3\},4 \} \} = \{3,4,\{3\},\{4\} \}$;
+
+\subparagraph*{(2)} \begin{align*}
+    \cap \{PPP(\varnothing),PP(\varnothing),P(\varnothing),\varnothing\} &= \cap \{\varnothing,\cdots\}\\
+        &=\varnothing
+\end{align*}
+
+\subparagraph*{(3)} $P\{\varnothing\}=\{\varnothing, \{\varnothing\}\}$. 易知$\varnothing\subseteq P\{\varnothing\}$及$\varnothing\subseteq PP\{\varnothing\}$,故$\varnothing\in PP\{\varnothing\}$且$\varnothing\in PPP\{\varnothing\}$. 又由 $\varnothing\in P\{\varnothing\}$及$\varnothing\in PP\{\varnothing\}$, 知$\{\varnothing\}\in PP\{\varnothing\}$及$\{\varnothing\}\in PPP\{\varnothing\}$. 因此 $\cap \{PPP\{\varnothing\},PP\{\varnothing\},P\{\varnothing\}\}=\{\varnothing, \{\varnothing\}\}$.
+
+\paragraph*{20} 证明:
+\begin{align*}
+    A&=A\cap E\\
+    &=A\cap (C\cup \mathord{\sim} C)\\
+    &=(A\cap C)\cup (A\cap \mathord{\sim} C)\\
+    &\subseteq(B\cap C)\cup (B\cap \mathord{\sim} C)\\
+    &=B\cup (\mathord{\sim} C\cap C)\\
+    &=B\cup E\\
+    &=B    
+\end{align*}
+\QED
+
+\end{document}

@@ -1,0 +1,79 @@
+\documentclass{ctexart}
+\usepackage{diagbox}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{集合论与图论~作业1}
+\author{庄嘉毅}
+\date{September 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+\linespread{2}
+
+\begin{document}
+
+\maketitle
+
+以下以行表示 $A$ 的取值，列表示 $B$ 的取值。
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{| >{\columncolor[HTML]{E0E0E0}}c|l|l|}
+        \hline
+        \rowcolor[HTML]{E0E0E0}
+        \diagbox{$A$}{$B$} & 0 & 1 \\ \hline
+        0                  & 1 & 1 \\ \hline
+        1                  & 1 & 0 \\\hline
+    \end{tabular}
+    \caption{$\neg(A\wedge B)$的真值表}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{| >{\columncolor[HTML]{E0E0E0}}c|l|l|}
+        \hline
+        \rowcolor[HTML]{E0E0E0}
+        \diagbox{$A$}{$B$} & 0 & 1 \\ \hline
+        0                  & 1 & 1 \\ \hline
+        1                  & 1 & 0 \\\hline
+    \end{tabular}
+    \caption{$\neg A\vee \neg B$的真值表}
+\end{table}
+
+因此 $\neg (A \wedge B) \Leftrightarrow \neg A \vee \neg B$。
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{| >{\columncolor[HTML]{E0E0E0}}c|l|l|}
+        \hline
+        \rowcolor[HTML]{E0E0E0}
+        \diagbox{$A$}{$B$} & 0 & 1 \\ \hline
+        0                  & 1 & 0 \\ \hline
+        1                  & 0 & 0 \\\hline
+    \end{tabular}
+    \caption{$\neg(A\vee B)$的真值表}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{| >{\columncolor[HTML]{E0E0E0}}c|l|l|}
+        \hline
+        \rowcolor[HTML]{E0E0E0}
+        \diagbox{$A$}{$B$} & 0 & 1 \\ \hline
+        0                  & 1 & 0 \\ \hline
+        1                  & 0 & 0 \\\hline
+    \end{tabular}
+    \caption{$\neg A\wedge \neg B$的真值表}
+\end{table}
+
+因此 $\neg (A \vee B) \Leftrightarrow \neg A \wedge \neg B$。
+
+\end{document}

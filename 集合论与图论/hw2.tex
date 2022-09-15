@@ -1,0 +1,37 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{集合论与图论~作业2}
+\author{庄嘉毅}
+\date{September 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+\linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\paragraph*{1} 令 $F(x):$ x 是乌龟，$G(x):$ x 是兔子，$H(x,y):$ x 比 y 跑得快。
+
+命题符号化为 $\exists x (\ F(x)\rightarrow \exists y(\ G(y)\rightarrow H(x,y)\ )\ )$。
+
+求前束范式：
+\begin{align*}
+\exists x (\ F(x)\rightarrow \exists y(\ G(y)\rightarrow H(x,y)\ )\ ) &\Leftrightarrow \exists x \exists y (\ F(x)\rightarrow (\ G(y)\rightarrow H(x,y)\ )\ ) \\
+&\Leftrightarrow \exists x \exists y (\ F(x)\wedge G(y) \rightarrow H(x,y)\ )
+\end{align*}
+
+\paragraph*{2} 取个体域为实数集合，$A(x): x>1$，$B(x):x>2$。
+
+此时左侧为假，右侧为真。
+
+\end{document}
