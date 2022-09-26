@@ -1,9 +1,9 @@
 \documentclass{ctexart}
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{geometry}
-\usepackage{algorithm, algorithmic}
+\usepackage{algorithm, algorithmicx, algpseudocode}
 \usepackage{IEEEtrantools}
-\special{dvipdfmx:config z 0} % delete this when release
+% \special{dvipdfmx:config z 0} % delete this when release
 
 \geometry{a4paper,scale=0.8}
 
@@ -14,8 +14,8 @@
 \def\QED{\hfill $\square$}
 \def\st{\textrm{s.t.}\,}
 \DeclareMathOperator{\e}{e}
-\def\conj{\mathrel{\wedge}}
-\def\disj{\mathrel{\vee}}
+\def\nil{\textbf{nil}}
+\def\And{ \textbf{and} }
 
 \everymath{\displaystyle}
 % \linespread{2}
@@ -30,17 +30,17 @@
     \renewcommand{\algorithmicrequire}{\textbf{Input:}}
     \renewcommand{\algorithmicensure}{\textbf{Output:}}
     \caption{Remove duplicate elements in decrement sequence}
-    \begin{algorithmic}
-        \REQUIRE A decrement sequence $A=\{a_i\}$ of length $n$, $i=0,1,\ldots, n-1$.
-        \STATE $i \gets 0, j \gets 0$
-        \WHILE{$i < n$}
-        \STATE $A_j \gets A_i$
-        \WHILE{$i < n \conj A_i = A_j$}
-        \STATE $i \gets i + 1$
-        \ENDWHILE
-        \STATE $j \gets j + 1$
-        \ENDWHILE
-        \ENSURE $\{A_0, A_1,\ldots, A_j\}$.
+    \begin{algorithmic}[1]        
+        \Require A decrement sequence $A=\{a_i\}$ of length $n$, $i=0,1,\ldots, n-1$.
+        \State $i \gets 0$, $j \gets 0$
+        \While{$i < n$}
+        \State $A_j \gets A_i$
+        \While{$i < n$\And$A_i = A_j$}
+        \State $i \gets i + 1$
+        \EndWhile
+        \State $j \gets j + 1$
+        \EndWhile
+        \Ensure Sequence $\{A_0, A_1,\ldots, A_j\}$        
     \end{algorithmic}
 \end{algorithm}
 
@@ -53,14 +53,54 @@ $n$ 次, 外层循环执行不超过 $n$ 次, 总时间复杂度为 $O(n)$.
     \renewcommand{\algorithmicrequire}{\textbf{Input:}}
     \renewcommand{\algorithmicensure}{\textbf{Output:}}
     \caption{Reverse a linked list}
-    \begin{algorithmic}
-        \REQUIRE A linked list $L$.
-        \STATE $p \gets$ head node of $L$
-        \STATE $q \gets$ nil
-        \WHILE{$p \neq$ nil}
-        \STATE $r \gets \textsc{Next}(p)$ 
-        \ENDWHILE
+    \begin{algorithmic}[1]
+        \Require A linked list $L$ and its head node $head$.
+        \State $p \gets head.next$
+        \Comment{$p$ is the first node of $L$}
+        \State $q \gets$ \nil
+        \While{$p$ is not \nil}
+        \State $r \gets p.next$
+        \State $p.next \gets q$
+        \State $q \gets p$
+        \State $p \gets r$
+        \EndWhile
+        \State $head.next \gets q$
+        \Ensure The head node of reversed linked list is $head$.
     \end{algorithmic}
 \end{algorithm}
+
+时间复杂度: 循环遍历链表的每一个节点, 且每个节点只访问一遍, 因此时间复杂度为$O(n)$.
+
+空间复杂度: 仅使用了常数个变量, 因此空间复杂度为$O(1)$.
+
+\paragraph*{3} ~
+
+\begin{algorithm}[ht]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Determine whether a linked list is cyclic}
+    \begin{algorithmic}[1]
+        \Require A linked list $L$ and its head node $head$.
+        \State $p \gets head.next$
+        \Comment{The slow pointer}
+        \State $q \gets head.next$
+        \Comment{The fast pointer}
+        \While{$p$ is not \nil \And $q$ is not \nil}
+        \State $p \gets p.next$
+        \State $q \gets q.next$
+        \If{$q$ is not \nil}
+        \State $q \gets q.next$
+        \EndIf
+        \If{$p = q$}
+        \State \Return True
+        \EndIf
+        \EndWhile
+        \State \Return False
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度: 链表的每个节点至多在循环中被访问两遍, 因此时间复杂度为$O(n)$.
+
+空间复杂度: 仅使用了常数个变量, 因此空间复杂度为$O(1)$.
 
 \end{document}
