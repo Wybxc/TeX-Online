@@ -1,0 +1,66 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmic}
+\usepackage{IEEEtrantools}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{数据结构与算法~作业2}
+\author{庄嘉毅}
+\date{September 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\def\conj{\mathrel{\wedge}}
+\def\disj{\mathrel{\vee}}
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\paragraph*{1} ~
+
+\begin{algorithm}[ht]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Remove duplicate elements in decrement sequence}
+    \begin{algorithmic}
+        \REQUIRE A decrement sequence $A=\{a_i\}$ of length $n$, $i=0,1,\ldots, n-1$.
+        \STATE $i \gets 0, j \gets 0$
+        \WHILE{$i < n$}
+        \STATE $A_j \gets A_i$
+        \WHILE{$i < n \conj A_i = A_j$}
+        \STATE $i \gets i + 1$
+        \ENDWHILE
+        \STATE $j \gets j + 1$
+        \ENDWHILE
+        \ENSURE $\{A_0, A_1,\ldots, A_j\}$.
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度: 内层循环中 $i$ 每次自增 1, 最大值小于 $n$, 故内层循环执行
+$n$ 次, 外层循环执行不超过 $n$ 次, 总时间复杂度为 $O(n)$.
+
+\paragraph*{2} ~
+
+\begin{algorithm}[ht]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Reverse a linked list}
+    \begin{algorithmic}
+        \REQUIRE A linked list $L$.
+        \STATE $p \gets$ head node of $L$
+        \STATE $q \gets$ nil
+        \WHILE{$p \neq$ nil}
+        \STATE $r \gets \textsc{Next}(p)$ 
+        \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
