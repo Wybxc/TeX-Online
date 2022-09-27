@@ -1,0 +1,66 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+\usepackage{IEEEtrantools}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{数据结构与算法~作业3}
+\author{庄嘉毅}
+\date{September 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\def\nil{\textbf{nil}}
+\def\And{ \textbf{and} }
+\def\Not{\textbf{not} }
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\paragraph*{1} ~
+
+\begin{algorithm}[ht]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Simulate a queue using two stacks}
+    \begin{algorithmic}[1]
+        \Require Two stacks $S_1$ and $S_2$
+        \Procedure{Enqueue}{$x$}
+        \State \Call{Push}{$S_1, x$}
+        \Comment{Push $x$ to the back of $S_1$}
+        \EndProcedure
+        \vspace*{1em}
+
+        \Procedure{Dequeue}{$x$}
+        \While{\Not \Call{Empty}{$S_1$}}
+            \Comment{Move all elements from $S_1$ to $S_2$}
+            \State \Call{Pop}{$S_1, a$}
+            \State \Call{Push}{$S_2, a$}
+        \EndWhile
+        \State \Call{Pop}{$S_2, y$}
+        \Comment{Now the top of $S_2$ is the first element}
+        \While{\Not \Call{Empty}{$S_2$}}
+            \Comment{Move all elements back to $S_1$}
+            \State \Call{Pop}{$S_2, a$}
+            \State \Call{Push}{$S_1, a$}
+        \EndWhile
+        \State \Return $y$
+        \EndProcedure
+        \vspace*{1em}
+
+        \Procedure{QueueEmpty}{}
+        \State \Return \Call{Empty}{$S_1$}
+        \Comment{Note that $S_2$ is always empty between operations}
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
