@@ -18,8 +18,8 @@
 \def\imply{\draw[-{Implies[]}, double distance=2pt]}
 \DeclareMathOperator{\e}{e}
 \newcommand{\ftitle}[1]{\frametitle{\hspace{4ex} {#1}}}
-\newcommand{\bfig}[1]{
-    \begin{figure}[hb]\centering\resizebox{\columnwidth}{!}{#1}
+\newcommand{\bfig}[2][1.0]{
+    \begin{figure}[hb]\centering\resizebox{#1\columnwidth}{!}{#2}
     \end{figure}
 }
 \newcommand{\roq}[1]{\rotatebox[origin=c]{-90}{#1}}
@@ -123,9 +123,9 @@
                     \node (7) at (6, -0.25) {7};
                     \draw (5, -0.25) -- (7);
                 \end{tikzpicture}
-            }            
+            }
         \end{column}
-        \begin{column}{.5\linewidth}            
+        \begin{column}{.5\linewidth}
             \begin{lstlisting}
 int a = 1 + 2;
 int b = 4;
@@ -150,8 +150,8 @@ int c = a + b;
     \ftitle{流水线寄存器}
     \begin{itemize}
         \item 寄存器的输出只有收到时钟信号才会改变, 能够起到状态对齐的作用.
-        \item 为了在顺序处理器的五个状态之间创造明确的划分, 
-            需要在每个状态之间加入寄存器.
+        \item 为了在顺序处理器的五个状态之间创造明确的划分,
+              需要在每个状态之间加入寄存器.
     \end{itemize}
 
     \bfig{
@@ -178,6 +178,135 @@ int c = a + b;
             \imply (E1) -- (E);
         \end{tikzpicture}
     }
+\end{frame}
+
+\begin{frame}
+    \ftitle{流水线寄存器}
+    顺序相连的寄存器, 形成了逻辑上的队列结构.
+
+    \bfig[0.8]{
+        \begin{tikzpicture}
+            \node [draw, fill=blue!20] (I) at (0, 0) {Inc};
+            \node [draw] (A) at (2, 0) {Reg};
+            \node [draw] (B) at (4, 0) {Reg};
+            \node [draw] (C) at (6, 0) {Reg};
+            \node [draw] (D) at (8, 0) {Reg};
+            \draw[-latex] (I) -- (A) node[midway, above] {1};
+            \draw[-latex] (A) -- (B);
+            \draw[-latex] (B) -- (C);
+            \draw[-latex] (C) -- (D);
+            \node (E) at (9, 0) {$\cdots$};
+        \end{tikzpicture}
+    }
+
+    \bfig[0.8]{
+        \begin{tikzpicture}
+            \node [draw, fill=blue!20] (I) at (0, 0) {Inc};
+            \node [draw] (A) at (2, 0) {Reg};
+            \node [draw] (B) at (4, 0) {Reg};
+            \node [draw] (C) at (6, 0) {Reg};
+            \node [draw] (D) at (8, 0) {Reg};
+            \draw[-latex] (I) -- (A) node[midway, above] {2};
+            \draw[-latex] (A) -- (B) node[midway, above] {1};
+            \draw[-latex] (B) -- (C);
+            \draw[-latex] (C) -- (D);
+            \node (E) at (9, 0) {$\cdots$};
+        \end{tikzpicture}
+    }
+
+    \bfig[0.8]{
+        \begin{tikzpicture}
+            \node [draw, fill=blue!20] (I) at (0, 0) {Inc};
+            \node [draw] (A) at (2, 0) {Reg};
+            \node [draw] (B) at (4, 0) {Reg};
+            \node [draw] (C) at (6, 0) {Reg};
+            \node [draw] (D) at (8, 0) {Reg};
+            \draw[-latex] (I) -- (A) node[midway, above] {3};
+            \draw[-latex] (A) -- (B) node[midway, above] {2};
+            \draw[-latex] (B) -- (C) node[midway, above] {1};
+            \draw[-latex] (C) -- (D);
+            \node (E) at (9, 0) {$\cdots$};
+        \end{tikzpicture}
+    }
+
+    \bfig[0.8]{
+        \begin{tikzpicture}
+            \node [draw, fill=blue!20] (I) at (0, 0) {Inc};
+            \node [draw] (A) at (2, 0) {Reg};
+            \node [draw] (B) at (4, 0) {Reg};
+            \node [draw] (C) at (6, 0) {Reg};
+            \node [draw] (D) at (8, 0) {Reg};
+            \draw[-latex] (I) -- (A) node[midway, above] {4};
+            \draw[-latex] (A) -- (B) node[midway, above] {3};
+            \draw[-latex] (B) -- (C) node[midway, above] {2};
+            \draw[-latex] (C) -- (D) node[midway, above] {1};
+            \node (E) at (9, 0) {$\cdots$};
+        \end{tikzpicture}
+    }
+\end{frame}
+
+\begin{frame}
+    \ftitle{流水线寄存器}
+    \begin{itemize}
+        \item 流水线寄存器里面有什么?
+              \begin{itemize}
+                  \item 上一个阶段的计算结果.
+                  \item 之前的阶段接收的值, 没有经过计算, 但会在之后阶段用到.
+              \end{itemize}
+        \item 依赖时序的数据连接不会越过流水线寄存器.
+    \end{itemize}
+\end{frame}
+
+\section{流水线冒险}
+\begin{frame}
+    \ftitle{流水线冒险}
+    \begin{itemize}
+        \item 数据冒险
+              \begin{itemize}
+                  \item 下一条指令需要某一个寄存器参与运算, 但上一条指令更新了这个寄存器.
+              \end{itemize}
+        \item 控制冒险
+              \begin{itemize}
+                  \item 下一条指令是条件跳转, 需要上一条指令确定条件码.
+                  \item 下一条指令是 \texttt{ret}, 需要访问内存确定下一条指令的地址.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \ftitle{数据转发}
+    \begin{itemize}
+        \item 前后两条指令的执行在流水线中相差一个阶段.
+        \item 寄存器数据的读取发生在译码阶段, 此时上一条指令正在执行阶段.
+        \item 如果寄存器的新值在执行阶段时就能够计算出来
+        (例如 \texttt{add} 这样的算数指令), 
+        那么就可以把结果直接传递给下一条指令.
+        \item 如果寄存器的新值在执行阶段得不到
+        (例如 \texttt{movq (\%rax), \%rax}),
+        则无法进行数据转发.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \ftitle{分支预测}
+    \begin{itemize}
+        \item 对于 \texttt{jxx} 指令, 倾向于认为条件成立.
+        \begin{itemize}
+            \item 其他跳转策略: 向低地址跳转.
+            \item 原理: 大量的条件跳转发生在循环中, 而循环在未结束时往往向低地址跳转.
+        \end{itemize}
+        \item 对于 \texttt{ret} 指令, 可以使用硬件栈进行预测, 或者放弃预测.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \ftitle{暂停}
+    \begin{itemize}
+        \item 向流水线中插入 \texttt{bubble}, 将指令``阻断''在某个阶段.
+        \begin{itemize}
+            \item 发生
+        \end{itemize}
+    \end{itemize}
 \end{frame}
 
 \end{document}
