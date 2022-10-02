@@ -3,7 +3,7 @@
 \usepackage{geometry}
 \usepackage{algorithm, algorithmicx, algpseudocode}
 \usepackage{IEEEtrantools}
-\special{dvipdfmx:config z 0} % delete this when release
+% \special{dvipdfmx:config z 0} % delete this when release
 
 \geometry{a4paper,scale=0.8}
 
@@ -18,7 +18,7 @@
 \def\And{ \textbf{and} }
 \def\Not{\textbf{not} }
 
-\everymath{\displaystyle}
+% \everymath{\displaystyle}
 % \linespread{2}
 
 \begin{document}
@@ -41,16 +41,16 @@
 
         \Procedure{Dequeue}{$x$}
         \While{\Not \Call{Empty}{$S_1$}}
-            \Comment{Move all elements from $S_1$ to $S_2$}
-            \State \Call{Pop}{$S_1, a$}
-            \State \Call{Push}{$S_2, a$}
+        \Comment{Move all elements from $S_1$ to $S_2$}
+        \State \Call{Pop}{$S_1, a$}
+        \State \Call{Push}{$S_2, a$}
         \EndWhile
         \State \Call{Pop}{$S_2, y$}
         \Comment{Now the top of $S_2$ is the first element}
         \While{\Not \Call{Empty}{$S_2$}}
-            \Comment{Move all elements back to $S_1$}
-            \State \Call{Pop}{$S_2, a$}
-            \State \Call{Push}{$S_1, a$}
+        \Comment{Move all elements back to $S_1$}
+        \State \Call{Pop}{$S_2, a$}
+        \State \Call{Push}{$S_1, a$}
         \EndWhile
         \State \Return $y$
         \EndProcedure
@@ -62,5 +62,64 @@
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
+
+\paragraph*{2} 证明: 考虑一个出入栈操作序列 $S$,
+其中 $S_i \in \{\mathrm{Push}, \mathrm{Pop}\}, i=1,2,\ldots,2n$.
+$S$ 是合法的当且仅当
+\begin{gather*}
+    \sum_{i=1}^k [S_i=\mathrm{Push}] \ge \sum_{i=1}^k [S_i=\mathrm{Pop}],\\
+    \textrm{where } k=1,2,\ldots,2n,\\
+    [A] = \begin{cases}
+        1 & A \text{ is true},  \\
+        0 & A \text{ is false},
+    \end{cases}
+\end{gather*}
+且
+\begin{gather*}
+    \sum_{i=1}^{2n} [S_i=\mathrm{Push}] = \sum_{i=1}^{2n} [S_i=\mathrm{Pop}].
+\end{gather*}
+下面说明, 合法的 $S$ 与合法的出栈顺序一一对应.
+
+显然, 从出入栈操作序列 $S$ 到出栈顺序 $A$ 存在天然的满射.
+只需说明此映射是单射.
+
+若两个不同的出入栈操作序列 $S^1, S^2$ 对应同一个出栈顺序 $A$, 
+考虑最小的使得 $S^1_i\ne S^2_i$ 的 $i$. 
+不妨设 $S^1_i=\mathrm{Push}, S^2_i=\mathrm{Pop}$,
+并记由 $S^1_i$ 对应的入栈元素为 $a$, 由 $S^2_i$ 对应的出栈元素为 $b$.
+那么在时刻 $i$ 后, $S^1$ 对应的状态中 $a$ 在 $b$ 之前出栈, 
+而 $S^2$ 对应的状态中 $a$ 在 $b$ 之后出栈.
+因此, $S^1$ 和 $S^2$ 不可能对应同一个出栈顺序 $A$.
+
+因此, 合法的出入栈操作序列 $S$ 的个数即为卡塔兰数
+\begin{gather*}
+    C_n = \frac{1}{n+1} \binom{2n}{n}.
+\end{gather*}
+
+\paragraph*{3} 
+
+\subparagraph*{必要性} 假设存在 $i<j<k$ 使得 $P_j<P_k<P_i$, 
+那么在 $P_i$ 出栈时, 由于 $P_i$ 更大, 所以 $P_j, P_k$ 已经完成入栈,
+并且由于 $P_j, P_k$ 在 $P_i$ 之后出栈, 所以此时 $P_j, P_k$ 仍在栈内.
+根据先入后出, $P_j<P_k$, 因此 $P_j$ 先入栈, 其出栈应在 $P_k$ 之后,
+与 $j<k$ 矛盾. 因此合法的出栈序列中不存在这样的 $i, j, k$.
+
+\subparagraph*{充分性} 使用数学归纳法. 当 $n=1,2,3$ 时, 易知结论成立.
+当 $n\ge 4$ 时, 假设结论对 $1,2,\ldots,n-1$ 均成立,
+讨论序列 $P$ 中 1 的位置, 记 $P_j=1$.
+
+若 $j=1$, 则 $P_2, P_3, \ldots, P_n$ 满足条件, 根据归纳假设, 
+为合法的出栈序列, 进而 $P$ 为合法的出栈序列.
+
+同理, 若 $j=n$, 则 $P_1, P_2, \ldots, P_{n-1}$ 满足条件,
+同上根据归纳假设, 可知 $P$ 为合法的出栈序列.
+
+若 $1<j<n$, 任取 $1\le i < j < k \le n$, 有 $P_k > P_i$, 
+记 $P_1, P_2, \ldots, P_{j-1}$ 中最大数为 $m$, 那么根据归纳假设,
+$P_1, P_2, \ldots, P_{j-1}$ 为 $2,\ldots, m$ 的一个合法的出栈序列,
+$P_{j+1}, P_{j+2}, \ldots, P_n$ 为 $m+1, m+2, \ldots, n$ 的一个合法的出栈序列,
+因此 $P$ 为合法的出栈序列.
+
+\QED
 
 \end{document}
