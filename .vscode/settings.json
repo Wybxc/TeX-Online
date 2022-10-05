@@ -84,4 +84,6 @@
     "latex-workshop.view.pdf.invert": 0.88,
     "latex-workshop.view.pdf.invertMode.brightness": 1.5,
     "files.autoSave": "afterDelay",
+    "markdown-preview-enhanced.enableScriptExecution": true,
+    "markdown-preview-enhanced.latexEngine": "xelatex",
 }
