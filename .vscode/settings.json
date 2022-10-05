@@ -86,4 +86,11 @@
     "files.autoSave": "afterDelay",
     "markdown-preview-enhanced.enableScriptExecution": true,
     "markdown-preview-enhanced.latexEngine": "xelatex",
+    "latex-workshop.latexindent.args": [
+        "-c",
+        "%DIR%/",
+        "%TMPFILE%",
+        "-l=%WORKSPACE_FOLDER%/indent.yaml",
+        "-y=defaultIndent: '%INDENT%'"
+    ],
 }
