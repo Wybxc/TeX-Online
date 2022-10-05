@@ -1,0 +1,152 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+\usepackage{IEEEtrantools}
+% \special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{数据结构与算法~作业4}
+\author{庄嘉毅}
+\date{October 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\def\nil{\textbf{nil}}
+\def\And{ \textbf{and} }
+\def\Or{ \textbf{or} }
+\def\Not{\textbf{not} }
+
+% \everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\paragraph*{1} 方法一(使用辅助栈):
+
+\begin{algorithm}[H]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Determine whether a linked list is symmetric}
+    \begin{algorithmic}[1]
+        \Require A linked list $L$ with $len$ nodes
+        and a pointer $head$ pointing to the head of $L$.
+        \State Initialize an empty stack $S$
+        \State $p \gets head, q \gets head$
+        \Comment Slow and fast pointers
+        \While{$q$ is not \nil}
+            \State $p \gets p.next$
+            \State $q \gets q.next$
+            \If{$q$ is not \nil}
+                \State $q \gets q.next$
+            \EndIf
+            \State \Call{Push}{$S$, $p$}
+        \EndWhile
+        \Comment When the fast pointer reaches the end,
+        the slow one is at the middle.
+        \If{$len$ is even}
+            \Comment If $len$ is even, $p$ is the $len/2 + 1$ node,
+            \State \Call{Pop}{$S$}
+            \Comment The second element of the stack is the $len/2$ node.
+        \EndIf
+        \Comment Otherwise if $len$ is odd, $p$ is the $(len+1)/2$ node.
+        \While{$p$ is not \nil}
+            \State $q \gets \Call{Pop}{$S$}$
+            \If{$p.data \ne q.data$}
+                \State \Return False
+            \EndIf
+            \State $p \gets p.next$
+        \EndWhile
+        \State \Return True
+    \end{algorithmic}
+\end{algorithm}
+
+方法二(原地反转):
+
+\begin{algorithm}[H]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Determine whether a linked list is symmetric}
+    \begin{algorithmic}[1]
+        \Require A linked list $L$ with $len$ nodes
+        and a pointer $head$ pointing to the head of $L$.
+        \State $p \gets head, q \gets head$
+        \Comment Slow and fast pointers
+        \While{$q$ is not \nil}
+            \State $q \gets q.next$
+            \If{$q$ is not \nil}
+                \State $q \gets q.next$
+            \EndIf
+            \State $p' \gets p.next$
+            \Comment Reverse the first half of the list
+            \If{$p$ is not $head$}
+                \Comment Move $p$ to the front
+                \State $p.next \gets head.next.next$
+                \State $head.next \gets p$
+            \EndIf
+            \State $p \gets p'$
+        \EndWhile
+        \If{$len$ is odd}
+            \State $p \gets p.next$
+            \Comment Skip the $(len+1)/2$ node
+        \EndIf
+        \State $q \gets head.next$
+        \While{$p$ is not \nil}
+            \If{$p.data \ne q.data$}
+                \State \Return False
+            \EndIf
+            \State $p \gets p.next$
+            \State $q \gets q.next$
+        \EndWhile
+        \State \Return True
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\paragraph*{2} ~
+
+\begin{algorithm}[H]
+    \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+    \renewcommand{\algorithmicensure}{\textbf{Output:}}
+    \caption{Determine whether a string is a cyclic shift of another}
+    \begin{algorithmic}[1]
+        \Require Two strings $T$ and $T'$.
+        \State $l \gets$ \Call{StrLen}{$T$},
+        $l' \gets$ \Call{StrLen}{$T'$}
+        \If{$l \ne l'$}
+            \State \Return False
+        \EndIf
+        \State Initialize an array $\Pi$ of length $l$.
+        \Comment KMP vector
+        \State $\Pi_0 \gets -1$
+        \State $i \gets 0, j \gets -1$
+        \While{$i < l$}
+            \If{$j = -1$\Or $T'_i = T'_j$}
+                \State $i \gets i + 1$, $j \gets j + 1$
+                \State $\Pi_i \gets j$
+                \Else
+                \State $j \gets \Pi_j$
+            \EndIf
+        \EndWhile
+        \State $i \gets 0, j \gets -1$
+        \While{$i < 2l$}
+            \Comment Check whether $T'$ is a substring of $T+T$
+            \If{$j = -1$\Or $T_{i \bmod l} = T'_j$}
+                \State $i \gets i + 1$, $j \gets j + 1$
+                \If{$j = l$}
+                    \State \Return True
+                \EndIf
+                \Else
+                \State $j \gets \Pi_j$
+            \EndIf
+        \EndWhile
+        \State \Return False
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
