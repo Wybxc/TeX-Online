@@ -1,6 +1,7 @@
 \documentclass{ctexart}
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{geometry}
+\usepackage{enumitem}
 \usepackage{algorithm, algorithmicx, algpseudocode}
 \usepackage{IEEEtrantools}
 % \special{dvipdfmx:config z 0} % delete this when release
@@ -121,7 +122,7 @@
         \If{$l \ne l'$}
             \State \Return False
         \EndIf
-        \State Initialize an array $\Pi$ of length $l$.
+        \State Initialize an array $\Pi$ of length $l+1$.
         \Comment KMP vector
         \State $\Pi_0 \gets -1$
         \State $i \gets 0, j \gets -1$
@@ -148,5 +149,105 @@
         \State \Return False
     \end{algorithmic}
 \end{algorithm}
+
+\newpage
+
+\paragraph*{3} 考虑在已知特征向量 $\pi$ 的情况下进行的模式匹配.
+记 $T$ 为主串, $P$ 为模式串, $n$ 为 $T$ 的长度, $m$ 为 $P$ 的长度.
+
+构造有限状态机 $M$, 可能的状态有 $m+2$ 个,
+分别为 $-1, 0, 1, \ldots, m-1, m$.
+初始状态为 $0$, 终止状态为 $m$.
+状态转移方程为
+\begin{gather*}
+    M(\mathrm{curr}, \mathrm{input}) = \begin{cases}
+        0                                      & \textrm{if } \mathrm{curr} = -1,                 \\
+        \mathrm{curr} + 1                      & \textrm{if } \mathrm{input} = P_{\mathrm{curr}}, \\
+        M(\pi_{\mathrm{curr}}, \mathrm{input}) & \textrm{otherwise}.
+    \end{cases}
+\end{gather*}
+
+不难看出, KMP 算法等价于不断将输入串 $T$ 的每一个字符送入状态机 $M$ 中,
+直到 $M$ 进入终止状态 $m$.
+
+于是, KMP 算法的正确性, 等价于此有限状态机的正确性.
+
+下面提出对有限状态机的一个约束.
+当 $M$ 进入状态 $i$ 时, 对任意字符 $c$, 需满足:
+\begin{enumerate}[nosep, left=4em]
+    \item $M(i,c) = 0$ 或者 $P_{M(i,c)-1}=c$.
+    \item $\forall k \in \{1,2, \ldots, M(i,c)-1\}$, 有 $P_{k-1}=P_{i-M(i,c)+k}$.
+    \item 不存在 $j$ 满足 $M(i,c) < j < i+1$,
+          且使得 $\forall k\in\{1,2,\ldots, j-1\}$, 有 $P_{k-1}=P_{i-j+k}$.
+\end{enumerate}
+
+约束 1 和 2 保证 KMP 算法得出的匹配一定是正确的,
+约束 3 保证 KMP 算法不会遗漏正确的匹配.
+可以证明, 当满足这三个约束时, KMP 算法能够正确运行.
+
+事实上, 此约束可以适当放松. 注意到当 $P_i=c$ 时, $M(i,c)=i+1$,
+自然满足三个约束. 故约束的前提条件可以放松为任意字符 $c\ne P_i$.
+
+接下来, 证明 KMP 算法求解特征向量 $\pi$ 的算法能够满足上述约束.
+
+首先, 对于非优化算法, 给出与算法等价的 $\pi$ 向量的递归定义:
+\begin{gather*}
+    \pi_i = \begin{cases}
+        -1                & \textrm{if } i=0,                     \\
+        0                 & \textrm{if } i=1,                     \\
+        \pi_{i-1}+1       & \textrm{if } P_{\pi_{i-1}} = P_{i-1}, \\
+        \pi_{\pi_{i-1}}+1 & \textrm{otherwise}.
+    \end{cases}
+\end{gather*}
+
+不难证明, $\pi$ 满足以下性质:
+\begin{enumerate}[nosep, left=4em]
+    \item $\pi_i < i$.
+    \item $\forall j\in\{1, 2,\ldots, \pi_i\}$,
+          有 $P_{\pi_i-j} = P_{i-j}$.
+    \item $\forall j > \pi_i+1$, 存在 $k\in \{1, 2,\ldots, j-1\}$,
+          使得 $P_{k-1} \ne P_{i-j+k}$.
+\end{enumerate}
+
+对状态机的状态 $i$ 进行数学归纳法. 易知当 $i=-1$ 及 $i=0$ 时,
+满足全部三个约束. 假设当 $i=-1, 0, 1, \ldots, k-1$ 时, 状态机满足全部三个约束,
+则当 $i=k$ 时, 对任意字符 $c\ne P_k$:
+\begin{enumerate}[nosep, label=\arabic*)]
+    \item 由 $M(k,c)=M(\pi_{k},c)$, 及 $\pi_k < k$,
+          故由归纳假设, 有 $M(\pi_k, c)=0$ 或 $P_{M(\pi_k,c)-1}=c$, 满足约束 1.
+
+    \item 任取 $j\in\{1,2,\ldots,M(\pi_k,c)-1\}$, 由归纳假设, 有
+          $P_{\pi_k-M(\pi_k,c)+j}=P_{j-1}$, 又由 $\pi$ 的性质 2, 有
+          $P_{\pi_k-M(\pi_k,c)+j}=P_{k-M(\pi_k,c)+j}$, 故有
+          $P_{j-1}=P_{k-M(\pi_k,c)+j}$, 满足约束 2.
+
+    \item 假设存在 $j$ 满足 $M(\pi_k,c) < j < k+1$,
+          且使得 $\forall l\in\{1,2,\ldots, j-1\}$,
+          有 $P_{l-1}=P_{k-j+l}$. 由 $\pi$ 的性质 3,
+          有 $j\le \pi_k$. 又由 $\pi$ 的性质 2,
+          有 $P_{l-1}=P_{k-j+l}=P_{\pi_k-j+l}$,
+          与归纳假设中 $i=\pi_k$ 时的约束 3 矛盾.
+          故不存在这样的 $j$, 满足约束 3.
+\end{enumerate}
+
+综上, 当 $i=k$ 时, 状态机满足全部三个约束, 因此非优化的 KMP 算法是正确的.
+
+同样, 对于优化算法, 给出与算法等价的 $\pi'$ 向量的递归定义:
+\begin{gather*}
+    \pi'_i = \begin{cases}
+        -1                  & \textrm{if } i=0,                                                              \\
+        0                   & \textrm{if } i=1,                                                              \\
+        \pi'_{\pi'_{i-1}+1} & \textrm{if } P_{\pi'_{i-1}} = P_{i-1} \textbf{ and } P_{\pi'_{i-1}+1} = P_{i}, \\
+        \pi'_{i-1}+1        & \textrm{if } P_{\pi'_{i-1}} = P_{i-1},                                         \\
+        \pi'_{\pi'_{i-1}}+1 & \textrm{otherwise}.
+    \end{cases}
+\end{gather*}
+
+若 $P_{\pi'_{i-1}} = P_{i-1}$ 且
+$P_i=P_{\pi'_{i-1}+1}$, 对于 $c\ne P_i$,
+有 $M(i,c)=M(\pi'_i, c)=M(\pi'_{\pi'_{i-1}+1}, c) = M(\pi'_{i-1}+1,c)$,
+因此 $\pi'$ 与 $\pi$ 决定的状态机是等价的.
+所以优化的 KMP 算法也是正确的.
+\QED
 
 \end{document}
