@@ -24,6 +24,7 @@
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\ran}{ran}
 \DeclareMathOperator{\fld}{fld}
+\DeclareMathOperator{\card}{card}
 \DeclareMathOperator{\e}{e}
 
 \everymath{\displaystyle}
@@ -63,7 +64,7 @@ $g_{-1}(B_2)=\{3,6\}$.
 
 \section*{习题四}
 
-\paragraph*{(2)}
+\paragraph*{2}
 
 \subparagraph*{(1)} $2\cup 3=\{0,1\}\cup \{0,1,2\}=\{0,1,2\}=3$;
 
@@ -98,9 +99,9 @@ $g_{-1}(B_2)=\{3,6\}$.
 
 \section*{习题五}
 
-\paragraph*{2} 
+\paragraph*{2} 证明: 
 
-\subparagraph*{(1)} 证明: 当 $f=g$ 时, $\ran f=\ran g$,
+\subparagraph*{(1)} 当 $f=g$ 时, $\ran f=\ran g$,
 因此 $R$ 是自反的.
 
 当 $fRg$ 且 $gRh$ 时, $\ran f=\ran g=\ran h$. 故 $fRh$,
@@ -109,7 +110,7 @@ $g_{-1}(B_2)=\{3,6\}$.
 当 $fRg$ 时, $\ran f=\ran g$, 因此 $fRg$ 且 $gRf$,
 因此 $R$ 是对称的. \QED
 
-\subparagraph*{(2)} 证明: 构造映射 $\varphi: (A\mathop{\to} A)/R \mathrel{\to} P(A)-\{\varnothing\}$,
+\subparagraph*{(2)} 构造映射 $\varphi: (A\mathop{\to} A)/R \mathrel{\to} P(A)-\{\varnothing\}$,
 $\varphi(F)=\ran f, \textrm{where } f\in F$.
 下证: $\varphi$ 是双射.
 
@@ -135,5 +136,51 @@ $n=0$ 时结论平凡. $n=1$ 时, 若 $\epsilon$ 是 $n$ 的真子集, 只有 $\
 
 综上, 存在 $p\in n$ 使得$\epsilon \approx p$. \QED
 
-% 第5章习题：5、11、12，补充题4
+\paragraph*{11} 
+
+\subparagraph*{(1)} 可构造 $f:\mathbb{N}\to A, f(n)=n^7$,
+$g:A\to\mathbb{N}, g(n)=n$, 因此 $\aleph_0 \le \card A \le \aleph_0$,
+故 $\card A = \aleph_0$;
+
+\subparagraph*{(2)} 同 (1) 知 $\card B = \aleph_0$;
+
+\subparagraph*{(3)} $\card(A\cup B)=\card A + \card B = \aleph_0$;
+
+\subparagraph*{(4)} $\card(A\cap B)=\card \{n^{7\times 109}\mid n\in \mathbb{N} \conj n\ne 0\} = \aleph_0$;
+
+\paragraph*{12} 证明: 由 $A\approx B$, 存在双射 $f: A\to B$. 
+构造 $g: P(A) \to P(B)$, 使 $\forall S \subseteq A, g(S)=f(S)$.
+下证: $g$ 是双射.
+
+设 $S,S'\subseteq A$, 若 $g(S)=g(S')$, 那么 $\forall x\in S$, 
+有 $f(x)\in g(S) = g(S')$, 因此 $x = f^{-1}(f(x)) \in S'$,
+故 $S\subseteq S'$, 同理 $S'\subseteq S$, 因此 $S=S'$, 故 $g$ 是单射.
+
+任取 $T\subseteq B$, 令 $S=f^{-1}(T) \subseteq A$, 那么 $g(S)=f(S)=T$,
+因此 $g$ 是满射. \QED
+
+\paragraph*{补充题4} 
+
+\subparagraph*{(1)} 记 $\card A=\kappa$, 由 $A\to\varnothing=\varnothing$,
+知 $\kappa^0=0$.
+
+\subparagraph*{(2)} 记 $\card A=\kappa$, 由 $\varnothing\to A=\varnothing$,
+知 $0^\kappa=0$.
+
+\subparagraph*{(3)} 记 $\card A = \card B =\kappa$, 且 $A\cap B=\varnothing$,
+那么 $\kappa+\kappa=\card(A\cup B)$, $2\kappa=\card(2\times A)$.
+由 $A\approx B$, 存在双射 $\varphi: A\to B$.
+构造 $f:2\times A \to A\cup B, f(\pair{0, a})=a, f(\pair{1, a})=\varphi(a)$.
+下证: $f$ 是双射.
+
+设 $\pair{n, a}, \pair{n',a'}\in 2\times A$, 若 $f(\pair{n, a})=f(\pair{n',a'})$,
+必有 $n=n'$, 否则不妨设 $n=0, n'=1$, 那么 $f(\pair{n,a})\in A, f(\pair{n',a'})\in B$,
+与 $A\cap B=\varnothing$ 矛盾. 因此 $n=n'$, 故 $a=a'$ 或 $\varphi(a)=\varphi(a')$,
+后者由于 $\varphi$ 是双射, 同样可推出 $a=a'$, 因此 $f$ 是单射.
+
+对任意 $b\in A\cup B$, 若 $b\in A$, 有 $f(\pair{0, b})=b$, 否则 $b\in B$,
+有 $f(\pair{1, \varphi^{-1}(b)})=b$, 因此 $f$ 是满射. \QED
+
+
+% 第5章习题：11、12，补充题4
 \end{document}
