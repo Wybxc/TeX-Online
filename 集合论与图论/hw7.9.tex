@@ -1,0 +1,104 @@
+\documentclass{ctexart}
+\usepackage{multicol}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{tikz}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\usetikzlibrary{positioning}
+
+\geometry{a4paper,scale=0.8}
+
+\title{集合论与图论~作业7-9}
+\author{庄嘉毅}
+\date{October 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\def\pair#1{\left\langle #1 \right\rangle}
+\def\conj{\mathrel{\wedge}}
+\def\disj{\mathrel{\vee}}
+\def\equ{\mathrel{\Leftrightarrow}}
+\def\restr{\mathbin{\upharpoonright}}
+\def\ple{\mathrel{\preccurlyeq}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\fld}{fld}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+\section*{习题三}
+
+\paragraph*{11} 证明: 设存在 $b,b'$ 使得 $g(b)=g(b')$.
+由 $f$ 是满射, 知 $g(b)\ne \varnothing$, 因此
+$\forall x\in A, f(x)=b \equ f(x)=b'$. 由 $f$ 的单值性,
+知 $b=b'$, 因此 $g$ 是单射. \QED
+
+\paragraph*{19}
+
+\subparagraph*{(1)} $f(A_1)=\{1,2,3\}$,
+$f_{-1}(B_1)=\{0, 4, 5, 6\}$,
+
+\subparagraph*{(2)} $g(A_2)=\mathbb{N}$,
+$g_{-1}(B_2)=\{3,6\}$.
+
+\subparagraph*{(3)} $f$ 是单射, 有反函数. $g$ 不是单射, 无反函数.
+
+\paragraph*{20}
+
+\subparagraph*{(1)} 设存在 $b, b'\in B$ 使得 $f(b)=f(b')$.
+由 $g$ 是满射, 故存在 $a,a'\in A$ 使得 $g(a)=b, g(a')=b'$,
+那么 $f(g(a))=f(g(a'))$.
+又 $f\circ g$ 是单射, 因此 $a=a'$, 故 $b=b'$, 所以 $f$ 是单射. \QED
+
+\subparagraph*{(2)} 任取 $b\in B$, 那么 $c=f(b)\in C$.
+由 $f\circ g$ 是满射, 存在 $a\in A$, 使得 $f(g(a))=c$.
+又由 $f$ 是单射, 知 $g(a)=b$, 因此 $g$ 是满射. \QED
+
+\section*{习题四}
+
+\paragraph*{(2)}
+
+\subparagraph*{(1)} $2\cup 3=\{0,1\}\cup \{0,1,2\}=\{0,1,2\}=3$;
+
+\subparagraph*{(2)} $2\cap 3=\{0,1\}\cap \{0,1,2\}=\{0,1\}=2$;
+
+\subparagraph*{(3)} $\cup 5=\cup \{0,1,2,3,4\}=4$;
+
+\subparagraph*{(4)} $\cap 6=\cap \{0,1,2,3,4,5\}=0$.
+
+\subparagraph*{(5)} $\cup\cup 7=\cup 6=5$.
+
+\paragraph*{3} 证明: 考虑数学归纳法. 对于 $n=1$, 有 $1=0^+$;
+对于一般的 $n$, 有 $n^+$ 是 $n$ 的后继. 由数学归纳法知结论成立. \QED
+
+\paragraph*{5} 证明: 任取 $b\in B, B\in A^+$, 由 $A^+=A\cup \{A\}$,
+知 $B\in A$ 或者 $B=A$. 若 $B=A$, 那么已有 $b\in A$;
+若 $B\in A$, 那么由 $A$ 是传递集, 知 $b\in A$.
+又 $A\subseteq A^+$, 故 $b\in A^+$, 因此 $A^+$ 是传递集. \QED
+
+\paragraph*{7} 证明: 设 $n, n_0 \in \mathbb{N}$, 且 $h(n)=h(n_0)$, 
+不妨设 $n=n_0$ 或 $n< n_0$. 下证: $n=n_0$.
+
+对 $n$ 使用数学归纳法.
+当 $n=0$ 时, 由 $h(n_0)=h(0)=a$, 若 $n_0>0$, 记 $n_0=m_0^+$, 
+则 $h(n_0)=f(h(m_0))\in \ran f$, 与 $a\notin \ran f$ 矛盾. 
+因此 $n_0=0=n$.
+
+当 $n>0$ 时, 记 $n=m^+, n_0=m_0^+$, 由 $h(n)=h(n_0)$, 
+及 $h(n)=f(h(m))$, 知 $f(h(m))=f(h(m_0))$, 
+根据 $f$ 是单射, 知 $h(m)=h(m_0)$, 根据归纳假设, 得 $m=m_0$,
+因此 $n=n_0$. \QED
+
+\section*{习题五}
+
+
+
+% 第5章习题：2、5、11、12，补充题4
+\end{document}
