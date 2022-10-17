@@ -98,7 +98,42 @@ $g_{-1}(B_2)=\{3,6\}$.
 
 \section*{习题五}
 
+\paragraph*{2} 
 
+\subparagraph*{(1)} 证明: 当 $f=g$ 时, $\ran f=\ran g$,
+因此 $R$ 是自反的.
 
-% 第5章习题：2、5、11、12，补充题4
+当 $fRg$ 且 $gRh$ 时, $\ran f=\ran g=\ran h$. 故 $fRh$,
+因此 $R$ 是传递的. 
+
+当 $fRg$ 时, $\ran f=\ran g$, 因此 $fRg$ 且 $gRf$,
+因此 $R$ 是对称的. \QED
+
+\subparagraph*{(2)} 证明: 构造映射 $\varphi: (A\mathop{\to} A)/R \mathrel{\to} P(A)-\{\varnothing\}$,
+$\varphi(F)=\ran f, \textrm{where } f\in F$.
+下证: $\varphi$ 是双射.
+
+对于 $F, G\in (A\mathop{\to} A)/R$, 若 $\varphi(F)=\varphi(G)$, 
+那么 $\forall f\in F, g\in G, \ran f = \ran g$, 那么 $\pair{f,g} \in R$,
+故 $F=G$. 因此 $\varphi$ 是单射.
+
+任取 $S \in P(A)-\{\varnothing\}$, 可构造 $f:A\to A$ 使 $\ran f=S$
+(例如取 $s\in S$,令 $\forall a\in S, f(a)=a$,
+$\forall a \in A-S, f(a)=s$), 那么对于 $f\in F\in (A\mathop{\to} A)/R$,
+有 $\varphi(F)=S$, 因此 $\varphi$ 是满射. \QED
+
+\paragraph*{5} 证明: 对 $n$ 使用数学归纳法.
+
+$n=0$ 时结论平凡. $n=1$ 时, 若 $\epsilon$ 是 $n$ 的真子集, 只有 $\epsilon=0$, 
+因此 $\epsilon \approx 0 \in 1$.
+
+当 $n>1$ 时, 记$\epsilon$ 是 $n$ 的真子集, $n=m^+$. 若 $m\notin \epsilon$, 
+那么由归纳假设, 存在 $p\in m\subseteq n$ 使 $\epsilon \approx p$.
+若 $m\in \epsilon$, 那么 $\epsilon-\{m\}$ 是 $m$ 的真子集,
+由归纳假设, 存在 $p_0\in m$ 使 $\epsilon-\{m\} \approx p_0$,
+此时 $p=p_0^+$ 满足 $\epsilon \approx p$, 且 $p\in n$.
+
+综上, 存在 $p\in n$ 使得$\epsilon \approx p$. \QED
+
+% 第5章习题：5、11、12，补充题4
 \end{document}
