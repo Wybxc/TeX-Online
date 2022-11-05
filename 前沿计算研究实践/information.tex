@@ -1,0 +1,63 @@
+\documentclass{ctexart}
+\usepackage{multicol}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{前沿计算研究实践~概念报告~信息}
+\author{庄嘉毅}
+\date{October 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\def\pair#1{\left\langle #1 \right\rangle}
+\def\conj{\mathrel{\wedge}}
+\def\disj{\mathrel{\vee}}
+\def\equ{\mathrel{\Leftrightarrow}}
+\def\restr{\mathbin{\upharpoonright}}
+\def\ple{\mathrel{\preccurlyeq}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\fld}{fld}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+信息的概念由来已久。语言作为信息的载体，人类语言的发明即意味着对信息概念的认知。
+很长一段时间里，在科学与哲学的研究中，人们对信息的理解都是从经验主义的角度出发，
+把信息当作一种固有的、不证自明的概念，而无需探究其本质。
+直到第二次工业革命，无线电技术诞生，信息获得了新的载体，
+首次成为可被把握的实在的存在；此时人们意识到信息本身也是可以，并且应该被认识的。
+
+香农最早对信息给出一个理论自洽的完整的定义。香农把信息定义为
+“用于消除不确定性的东西”，我们知道的信息越多，
+越能在复杂的概率空间里确证确定性的存在。
+由此，他提出了信息熵的数学形式：
+
+\begin{equation*}
+H(X) = -\sum_{x\in\dom(X)} p(x)\log_2 p(x)
+\end{equation*}
+
+时至今日，现代人谈论起信息，言必称香农的信息熵。这是一个值得思考的现象：
+为何信息熵这个概念能够如此广泛地被接受，即使信息技术的发展早已超越香农的时代？
+
+从实践的层面上看，香农的信息熵公式达成了对信息定量的表述，
+给予人们将信息纳入其他工程领域的机会。信息熵描述了理论上信息的极限量，
+“无信息”与“完全信息”可以先验地预测，使得信息传递的实践有迹可循。
+
+从哲学的层面上看，香农的信息熵源于对信息的认识论理解，
+也开启了通向本体论视角的道路。信息熵描述的是认识主体对信息的认识程度，
+但其数值完全由认识客体的固有性质决定。
+在二十世纪理性主义转向非理性主义的哲学浪潮中，本体论再次复苏，
+信息熵得到再解释，将信息的理解带入新的高度。
+
+
+\end{document}
