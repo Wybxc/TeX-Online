@@ -1,0 +1,58 @@
+\documentclass{ctexart}
+\usepackage{multicol}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{前沿计算研究实践~概念报告~智能}
+\author{庄嘉毅}
+\date{November 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\def\pair#1{\left\langle #1 \right\rangle}
+\def\conj{\mathrel{\wedge}}
+\def\disj{\mathrel{\vee}}
+\def\equ{\mathrel{\Leftrightarrow}}
+\def\restr{\mathbin{\upharpoonright}}
+\def\ple{\mathrel{\preccurlyeq}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\fld}{fld}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+何为``人工智能''？这是一个难以回答的问题。从被称为``人工智能起源''的达特茅斯会议之后，
+人工智能一直是非常模糊、充满争议的概念。争议的焦点集中于二：
+什么是智能？什么样的程序可以被称为``人工智能''？
+
+符号主义、连接主义、行为主义分别从数理逻辑、仿生学、控制论的角度解释人工智能，
+各自催生了一系列的人工智能理论，带来了机器推理、神经网络、智能机器人等一系列的技术。
+今日，这几种声音间的界限已经不在清晰，人工智能的研究已经不再局限于某一种理论，
+而是在不断地融合、发展。
+
+那么，在人工智能已经走入大众视野的今天，我们可以用怎样的方式界定人工智能呢？
+
+从后经验主义的视角，人工智能相对于``非人工智能''而言。
+计算机程序可以视为对给定任务的一种建模，其智能与否取决于其完成的任务的性质。
+比如说，一个排序算法从来不会被认为是智能的，因为排序这个任务是机械的。
+而一个能够自动完成数学证明的程序则被认为是智能的，因为数学证明是一种创造性的任务。
+一个图像分类程序也可以被认为是智能的，因为图像分类是需要学习才能完成的。
+但一个网络拥塞的动态控制算法则不被看做智能的，尽管它内部有许多可以被学习的参数，
+但整体上来说，它的任务是不变的。
+
+从这个角度来看，人工智能是一种人工设计的、能够完成智能体完成的任务的系统。
+其最终的结果，是代替智能的主体——人类，完成一些任务。而其过程来源于对任务的建模方式。
+这种建模方式可以是数学的，也可以是仿生的，也可以是行为的。
+但殊途同归，最终的结构都是一样的：一个能够完成任务的系统。
+
+\end{document}
