@@ -1,0 +1,64 @@
+\documentclass{ctexart}
+\usepackage{multicol}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{前沿计算研究实践~概念报告~逻辑}
+\author{庄嘉毅}
+\date{October 2022}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\def\pair#1{\left\langle #1 \right\rangle}
+\def\conj{\mathrel{\wedge}}
+\def\disj{\mathrel{\vee}}
+\def\equ{\mathrel{\Leftrightarrow}}
+\def\restr{\mathbin{\upharpoonright}}
+\def\ple{\mathrel{\preccurlyeq}}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\ran}{ran}
+\DeclareMathOperator{\fld}{fld}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\e}{e}
+
+\everymath{\displaystyle}
+% \linespread{2}
+
+\begin{document}
+
+\maketitle
+
+对逻辑的理解，可以分为多个层面。在日常生活中，我们运用因果推理，运用排除和假设，
+对未知的事情加以推测。在数学中，书写证明要考虑周密，避免逻辑错误。
+在计算机科学中，我们运用逻辑来描述程序的行为，以及程序的正确性。
+总体上来说，可以把逻辑分为两类：直觉的、非形式的朴素逻辑，以及可符号化的、形式的逻辑。
+
+朴素逻辑直接源于人类对周遭事物的认识，从所见事物中提取出命题，
+以经验的方式判断命题之间的关系。在朴素逻辑的观点中，逻辑是后验的，
+即逻辑是由人类的认知过程产生的，而非逻辑产生认知。
+
+形式逻辑诞生于数学符号化统一的过程中。数学家试图用先验的公理体系来描述数学世界，
+在公理的基础上，通过推理来证明新的命题。这种推理的过程，需要一种先验的规定，
+即先验的逻辑。
+
+公理体系的一个重要特征是相容性，这可以由不同公理间的独立性来保证。
+形式逻辑要求逻辑的符号化，势必需要找出一套最小的逻辑原理，
+通过它们导出一系列在朴素逻辑中成立的规则。但问题在于，公理的推导依赖于逻辑，
+而逻辑的推导却不能依赖逻辑自身，必须要假设一种先逻辑存在的规则，
+才能让逻辑适用其中。
+
+最终，逻辑学家将目光看向语言。把逻辑公式视作符号串，再预设一系列语法规则，
+对逻辑符号进行展开或规约。这成功地构建了一种先逻辑的规则，让我们能够构建逻辑本身。
+
+但回过头来看，形式逻辑的这种构建方式在自洽性上是成功的，
+但其有用性依然需要经过朴素逻辑的检验。逻辑的形式化没有超越经验，
+只是在以另一种方式表达经验。
+
+这似乎与思辨哲学的发展历程有内在的一致性。从经验主义到理性主义，
+再到非理性的后经验主义，我们的思辨方式在不断地变化，但只有一点是不变的，
+我们所做的一切都是在认识我们生活的世界。
+
+\end{document}
