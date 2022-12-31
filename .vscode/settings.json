@@ -1,9 +1,9 @@
-{    
-    "latex-workshop.showContextMenu": true, 
-    "latex-workshop.latex.autoBuild.run": "onSave", 
+{
+    "latex-workshop.showContextMenu": true,
+    "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.message.error.show": false,
     "latex-workshop.message.warning.show": false,
-    "latex-workshop.intellisense.package.enabled": true, 
+    "latex-workshop.intellisense.package.enabled": true,
     "latex-workshop.latex.recipes": [
         {
             "name": "xelatex",
@@ -16,6 +16,15 @@
             "tools": [
                 "xelatex",
                 "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "xelatex -> biber -> xelatex*2",
+            "tools": [
+                "xelatex",
+                "biber",
                 "xelatex",
                 "xelatex"
             ]
@@ -56,12 +65,22 @@
             "args": [
                 "%DOCFILE%"
             ]
+        },
+        {
+            "name": "biber",
+            "command": "biber",
+            "args": [
+                "%DOCFILE%"
+            ]
         }
-    ],    
+    ],
     "latex-workshop.latex.clean.fileTypes": [
         "*.aux",
         "*.bbl",
         "*.blg",
+        "*.brf",
+        "*.bcf",
+        "*.run.xml",
         "*.idx",
         "*.ind",
         "*.lof",
