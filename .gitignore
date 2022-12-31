@@ -8,3 +8,7 @@
 *.toc
 *.vrb
 *.pdf
+*.vrb
+*.bbl
+*.blg
+*.brf
