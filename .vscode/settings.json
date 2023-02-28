@@ -39,7 +39,7 @@
     "latex-workshop.latex.tools": [
         {
             "name": "xelatex",
-            "command": "xelatex",
+            "command": "/usr/local/texlive/2022/bin/x86_64-linux/xelatex",
             "args": [
                 "-shell-escape",
                 "-synctex=1",
@@ -50,7 +50,7 @@
         },
         {
             "name": "pdflatex",
-            "command": "pdflatex",
+            "command": "/usr/local/texlive/2022/bin/x86_64-linux/pdflatex",
             "args": [
                 "-shell-escape",
                 "-synctex=1",
@@ -61,14 +61,14 @@
         },
         {
             "name": "bibtex",
-            "command": "bibtex",
+            "command": "/usr/local/texlive/2022/bin/x86_64-linux/bibtex",
             "args": [
                 "%DOCFILE%"
             ]
         },
         {
             "name": "biber",
-            "command": "biber",
+            "command": "/usr/local/texlive/2022/bin/x86_64-linux/biber",
             "args": [
                 "%DOCFILE%"
             ]
