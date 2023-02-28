@@ -12,7 +12,7 @@ cd ..
 
 echo ""
 echo "> Install packages"
-sudo /usr/local/texlive/2022/bin/x86_64-linux/tlmgr install xetex ctex biber ieeetran latexindent diagbox pict2e standalone tkz-graph
+sudo /usr/local/texlive/2022/bin/x86_64-linux/tlmgr install xetex ctex biber listings underscore ieeetran latexindent diagbox pict2e standalone tkz-graph
 wget http://cpanmin.us/ -O cpanm
 chmod +x cpanm
 sudo ./cpanm File::HomeDir YAML::Tiny
