@@ -17,7 +17,7 @@ wget http://cpanmin.us/ -O cpanm
 chmod +x cpanm
 sudo ./cpanm File::HomeDir YAML::Tiny
 sudo apt update
-sudo apt install -y pdf2svg
+sudo apt install -y pdf2svg fonts-firacode
 
 echo ""
 echo "> Setup environment"
