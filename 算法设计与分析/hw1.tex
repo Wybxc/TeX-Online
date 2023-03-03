@@ -1,0 +1,124 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+% \special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{算法设计与分析~作业1}
+\author{庄嘉毅}
+\date{Feburary 2023}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+
+\algsetblockdefx[Function]{Function}{EndFunction}{}{}[3]{\textbf{function} \textsc{#1}(#2) \textbf{returns} #3}{\textbf{end function}}
+\algsetblockdefx[Persistent]{Persistent}{EndPersistent}{}{}{\textbf{persistent:}}{}
+\algsetblockdefx[For]{For}{EndFor}{}{}[1]{\textbf{for} #1 \textbf{do}}{\textbf{end for}}
+\algsetblockdefx[If]{If}{EndIf}{}{}[1]{\textbf{if} #1 \textbf{then}}{\textbf{end if}}
+\newcommand{\Let}[1]{\State #1 $\gets$}
+\newcommand{\F}[2]{\textsc{#1}(#2)}
+\newcommand{\Ret}[1]{\State \textbf{return} #1}
+
+\begin{document}
+
+\maketitle
+
+\section{Textbook Exercises}
+
+\paragraph*{1.18} 对下列函数, 按照他们的阶从高到低排列:
+\begin{gather*}
+    n!, 2^{2n}, n2^n, (\log n)^{\log n}=\Theta(n^{\log\log n}), n^3, \log n!=\Theta(n\log n), \\
+    n=\Theta(\log 10^n), 2^{\sqrt{2\log n}}, 2^{\log \sqrt{n}}, \sum_{k-1}^n \frac{1}{k}=\Theta(\log n), \log\log n
+\end{gather*}
+
+\paragraph*{1.19} 求解以下递推方程:
+
+\subparagraph*{(1)} \begin{align*}
+    T(n) & = T(n-1) + n^2           \\
+         & = \sum_{k=1}^n k^2       \\
+         & = \frac{n(n+1)(2n+1)}{6} \\
+         & = \Theta(n^3)
+\end{align*}
+
+\subparagraph*{(3)} \begin{align*}
+    T(n) & = T(n/2) + T(n/4) + cn
+\end{align*}
+
+故
+\begin{align*}
+    T(n) - 4cn & = T(n/2) - 2cn + T(n/4) - cn                  \\
+               & = F_{\log n}(T(2)-4c) + F_{\log n -1}(T(1)-c) \\
+               & = \Theta(\varphi^{\log n})                    \\
+               & = o(n)
+\end{align*}
+其中 $F_n$ 为 Fibonacci 数列, $\varphi=(1+\sqrt{5})/2 $.
+
+因此
+\begin{align*}
+    T(n) & = 4cn + o(n) \\
+         & =\Theta(n)
+\end{align*}
+
+\subparagraph*{(5)} \begin{align*}
+    T(n) & = 5T(n/2) + (n\log n)^2                                      \\
+         & = \sum_{k=1}^{\log n} 5^k \frac{n}{2^k} \log \frac{n}{2^k}   \\
+         & = n \sum_{k=1}^{\log n} (\log n-k)\left(\frac{5}{2}\right)^k \\
+         & = n \cdot \Theta\left((5/2)^{\log n}\right)                  \\
+         & = n \cdot \Theta\left(n^{\log 5-1}\right)                    \\
+         & = \Theta(n^{\log 5})
+\end{align*}
+
+\subparagraph*{(7)} \begin{align*}
+    T(n) & = T(n-1) + \frac{1}{n}     \\
+         & = \sum_{k=1}^n \frac{1}{k} \\
+         & = \Theta(\log n)
+\end{align*}
+
+\paragraph*{1.21} 算法A: $T(n)=5T(n/2) + cn$, 由主定理可得 $T(n)=\Theta(n^{\log_2 5})$.
+
+算法 B: $T(n)=2T(n-1) + c$, 解得 $T(n)=\Theta(2^n)$.
+
+算法 C: $T(n)=9T(n/3) + O(n^3)$, 在最坏情况下, $T(n)=9T(n/3) + \Theta(n^3)$, 由主定理可得 $T(n)=\Theta(n^3)$.
+
+因此在最坏情况下, 时间复杂度最低的算法为算法 A.
+
+\newpage
+\section{Partial Sum of a 1D Array}
+
+\paragraph*{(a)} $T(n)=O(n^3)$.
+
+\paragraph*{(b)} 固定 $i, j$, 计算 \texttt{A[i] + ... + A[j]} 的时间复杂度为 $\Theta(j-i)$, 将结果写入 \texttt{B[i, j]} 的用时为 $\Theta(1)$, 因此总时间复杂度为
+\begin{align*}
+    T(n) & = \sum_{i=1}^n \sum_{j=i+1}^n \left(\Theta(j-i) + \Theta(1)\right) \\
+         & = \sum_{i=1}^n \sum_{j=i+1}^n \Theta(j-i)                          \\
+         & = \sum_{i=1}^n \sum_{k=1}^{n-i} \Theta(k)                          \\
+         & = \sum_{i=1}^n \Theta((n-i)^2)                                     \\
+         & = \Theta(n^3)
+\end{align*}
+
+\paragraph*{(c)} 以下是时间复杂度为 $\Theta(n^2)$ 的算法:
+
+\begin{algorithm}[ht]
+    \caption{Partial Sum of a 1D Array}
+    \begin{algorithmic}
+        \Function{Partial-Sum}{$A$}{$B$}
+        \Let{$n$} \F{Length}{$A$}
+        \Let{$B$} \F{New-Array}{$n \times n$}
+        \\
+        \For{$i$ \textbf{in} $1,2,\ldots, n$}
+            \Let{$B[i, i]$} $A[i]$
+            \For{$j$ \textbf{in} $i+1,i+2,\ldots, n$}
+                \Let{$B[i, j]$} $B[i, j-1] + A[j]$
+            \EndFor
+        \EndFor
+        \\
+        \Ret $B$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
+
