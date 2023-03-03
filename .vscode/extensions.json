@@ -2,6 +2,10 @@
     "recommendations": [
         "james-yu.latex-workshop",
         "jeffersonqin.latex-snippets-jeff",
-        "shd101wyy.markdown-preview-enhanced"
+        "shd101wyy.markdown-preview-enhanced",
+        "ms-ceintl.vscode-language-pack-zh-hans",
+        "github.copilot",
+        "holmescn.vscode-wordcount-cjk",
+        "wakatime.vscode-wakatime"
     ]
 }
