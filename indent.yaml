@@ -1,7 +1,7 @@
 specialBeginEnd:
     If:
         begin: '\\If'
-        middle: '\\ElsIf'
+        middle: '\\ElsIf|\\Else'
         end: '\\EndIf'
         lookForThis: 1
     For:
