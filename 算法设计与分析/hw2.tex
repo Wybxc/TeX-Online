@@ -1,0 +1,357 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+\usepackage{float}
+% \special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{算法设计与分析~作业2}
+\author{庄嘉毅}
+\date{Feburary 2023}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\DeclareMathOperator{\argmin}{argmin}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\def\phantomeq{\mathrel{\phantom{=}}}
+
+\algsetblockdefx[Function]{Function}{EndFunction}{}{}[3]{\textbf{function} \textsc{#1}(#2) \textbf{returns} #3}{\textbf{end function}}
+\algsetblockdefx[Persistent]{Persistent}{EndPersistent}{}{}{\textbf{persistent:}}{}
+\algsetblockdefx[Require]{Require}{EndRequire}{}{}{\textbf{require:}}{}
+\algsetblockdefx[For]{For}{EndFor}{}{}[2]{\textbf{for} #1 \textbf{in} #2 \textbf{do}}{\textbf{end for}}
+\algsetblockdefx[If]{If}{EndIf}{}{}[1]{\textbf{if} #1 \textbf{then}}{\textbf{end if}}
+\algcblockdefx[If]{If}{Else}{EndIf}{\textbf{else}}{\textbf{end if}}
+\algcblockdefx[If]{If}{ElseIf}{EndIf}[1]{\textbf{else if} #1}{\textbf{end if}}
+\algsetblockdefx[While]{While}{EndWhile}{}{}[1]{\textbf{while} #1 \textbf{do}}{\textbf{end while}}
+\newcommand{\Let}[1]{\State #1 $\gets$}
+\newcommand{\F}[2]{\textsc{#1}(#2)}
+\newcommand{\Ret}[1]{\State \textbf{return} #1}
+\newcommand{\Nil}{\textbf{nil}}
+
+\begin{document}
+
+\maketitle
+
+\section{Textbook Exercises}
+
+\paragraph*{2.7}
+
+\subparagraph*{(1)} 排序-计数法:
+
+\begin{algorithm}[H]
+    \caption{Majority Number: Sorting-Counting}
+    \begin{algorithmic}
+        \Function{Majority-Sorting}{$A$}{$majority$ | \Nil}
+        \Let{$n$} length of $A$
+        \State sort $A$ in $\Theta(n \log n)$ time
+        \\
+        \Let{$majority$} $A[1]$
+        \Let{$count$} $1$
+        \Comment number of consecutive elements equal to $majority$
+        \For{$i$}{$2,3,\ldots, n$}
+            \If{$A[i] = A[i-1]$}
+                \Let{$count$} $count + 1$
+                \If{$count > n/2$}
+                    \Ret $majority$
+                \EndIf
+            \Else
+                \Let{$majority$} $A[i]$
+                \Let{$count$} $1$
+            \EndIf
+        \EndFor
+        \\
+        \Ret \Nil
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subparagraph*{(2)} 快速选择法:
+
+\begin{algorithm}[H]
+    \caption{Majority Number: Quick-Select}
+    \begin{algorithmic}
+        \Function{Majority-Select}{$A$}{$majority$ | \Nil}
+        \Let{$n$} length of $A$
+        \Let{$majority$} $\ceil{n/2}$-th smallest element of $A$
+        \Comment $majority$ must be the median of $A$
+        \\
+        \If{$majority$ appears more than $n/2$ times in $A$}
+            \Ret $majority$
+        \Else
+            \Ret \Nil
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subparagraph*{(3)} 投票法:
+
+\begin{algorithm}[H]
+    \caption{Majority Number: Voting}
+    \begin{algorithmic}
+        \Function{Majority-Voting}{$A$}{$majority$ | \Nil}
+        \Let{$n$} length of $A$
+        \Let{$i, j$} $1, 1$
+        \While{$j \le n$}
+            \While{$j \le n$ \textbf{and} $A[j]=A[i]$}
+                \Comment $A[j]$ is the first element different from $A[i]$ after it
+                \Let{$j$} $j + 1$
+            \EndWhile
+            \If{$j \le n$}
+                \State exchange $A[i]$ and $A[j]$
+                \Let{$i, j$} $i + 2, j+1$
+                \Comment elements before $A[i]$ are discarded
+            \EndIf
+        \EndWhile
+        \\
+        \Let{$majority$} $A[j-1]$
+        \If{$majority$ appears more than $n/2$ times in $A$}
+            \Ret $majority$
+        \Else
+            \Ret \Nil
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\paragraph*{2.27} 记商店的位置分别为 $(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)$, 仓库的位置为 $(x,y)$, 目标为最小化:
+\begin{gather*}
+    \argmin \sum_{i=1}^{n} \abs{x_i-x} + \abs{y_i-y}
+    =\argmin \sum_{i=1}^{n} \abs{x_i-x} + \sum_{i=1}^{n} \abs{y_i-y}
+\end{gather*}
+
+注意到 $\sum_{i=1}^{n} \abs{x_i-x}$ 和 $\sum_{i=1}^{n} \abs{y_i-y}$ 是独立的, 因此可以分别求解.
+
+\begin{algorithm}[H]
+    \caption{Minimum Distance}
+    \begin{algorithmic}
+        \Function{Minimum-Distance}{$n, X, Y$}{$(x, y)$ | \Nil}
+        \Let{$x$} $\ceil{n/2}$-th smallest element of $X$
+        \Let{$y$} $\ceil{n/2}$-th smallest element of $Y$
+        \Ret $(x, y)$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Forces between particles}
+
+不妨设 $n$ 是2的幂, 令
+\begin{align*}
+    h_t & = \begin{cases}
+                1/t^2,  & t>0, \\
+                0,      & t=0, \\
+                -1/t^2, & t<0
+            \end{cases}
+\end{align*}
+
+则
+\begin{align*}
+    F_j & = \sum_{i<j} \frac{Cq_iq_j}{(i-j)^2} - \sum_{i>j} \frac{Cq_iq_j}{(i-j)^2}          \\
+        & = Cq_j\left(\sum_{i<j} \frac{q_i}{(i-j)^2} - \sum_{i>j} \frac{q_i}{(i-j)^2}\right) \\
+        & = Cq_j\sum_{i=1}^n q_i h_{j-i}
+\end{align*}
+
+考虑到 $j-i$ 的范围是 $[-n, n]$, 故进行平移:
+\begin{align*}
+    q'_t & = q_{t-n} \\
+    h'_t & = h_{t-n} \\
+    F'_t & = F_{t-n}
+\end{align*}
+
+并补充定义 $\forall i<0, q_i = 0$, 那么
+\begin{align*}
+    F'_j & = Cq'_j \sum_{i=1}^n q_i h'_{j-i}
+\end{align*}
+
+记傅里叶变换为 $\mathcal{F}$, 有
+\begin{align*}
+    F' & = C q' \cdot (q \ast h')                                                       \\
+       & = C q' \cdot \mathcal{F}^{-1}\left(\mathcal{F}(q) \cdot \mathcal{F}(h')\right)
+\end{align*}
+
+\begin{algorithm}[H]
+    \caption{Forces between particles}
+    \begin{algorithmic}
+        \Function{Forces}{$n, q$}{$f$}
+        \Let{$q'$} $(0, 0, \ldots, 0, q_1, q_2, \ldots, q_n)$
+        \Let{$h'$} $\displaystyle \left(-\frac{1}{(n-1)^2}, -\frac{1}{(n-2)^2}, \ldots, -1, 0, 1, \frac{1}{2^2}, \ldots, \frac{1}{n^2}\right)$
+        \\
+        \Let{$Q'$} Fourier transform of $q'$
+        \Let{$H'$} Fourier transform of $h'$
+        \Let{$F'$} pointwise product of $Q'$ and $H'$
+        \Let{$f'$} inverse Fourier transform of $F'$
+        \\
+        \For{$i$}{$1,2,\ldots,n$}
+            \Let{$f_i$} $C q_i f'_{i+n}$
+        \EndFor
+        \Ret $f$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Revisit Counting Inversions}
+
+\paragraph*{3.1} 使用归并排序的变体:
+
+\begin{algorithm}[H]
+    \caption{Count Inversions cross two sorted arrays}
+    \begin{algorithmic}
+        \Function{Merge-Count}{$A_1, A_2, f$}{$A, count$}
+        \Comment count (i, j) s.t. $A_1[i] > f(A_2[j])$
+        \Let{$n_1, n_2$} \F{Length}{$A_1$}, \F{Length}{$A_2$}
+        \Let{$i, j$} $1, 1$
+        \Let{$count$} $0$
+        \Let{$A_1[n_1+1], A_2[n_2+1]$} $+\infty, +\infty$
+        \Comment $A_1[n_1+1], A_2[n_2+1]$ are sentinels
+        \While{$i \le n_1$ \textbf{or} $j \le n_2$}
+            \If{$A_1[i] \leq f(A_2[j])$}
+                \Let{$A[i+j-1]$} $A_1[i]$
+                \Let{$i$} $i+1$
+            \Else
+                \Let{$A[i+j-1]$} $A_2[j]$
+                \Let{$j$} $j+1$
+                \Let{$count$} $count + mid+1-i$
+            \EndIf
+        \EndWhile
+        \Ret $A, count$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+    \caption{Count Significant Inversions}
+    \begin{algorithmic}
+        \Function{Significant-Inversions}{$A$}{$count$}
+        \Let{$n$} length of $A$
+        \If{$n=1$}
+            \Ret $0$
+        \EndIf
+        \\
+        \Let{$mid$} $\floor{n/2}$
+        \Let{$left$} \F{Significant-Inversions}{$A[1..mid]$}
+        \Let{$right$} \F{Significant-Inversions}{$A[mid+1..n]$}
+        \\
+        \Let{$\_, count$} \F{Merge-Count}{$A[1..mid], A[mid+1..n], \lambda x: 2x$}
+        \Comment first pass: count
+        \Let{$A, \_$} \F{Merge-Count}{$A[1..mid], A[mid+1..n], \lambda x: x$}
+        \Comment second pass: merge
+        \\
+        \Ret $left+right+count$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\paragraph*{3.2} 记前缀和 $S_i=\sum_{k=1}^{i} a_k$, $S_0=0$, 那么 $S(i, j) = S_j - S_{i-1}$, 则 $S(i, j) \le U$ 等价于 $S_{i-1} > S_j + U -1$, 因此可套用 3.1 的算法.
+
+\begin{algorithm}[H]
+    \caption{Count of Range Sum}
+    \begin{algorithmic}
+        \Function{Sum-Less-Than}{$A, U$}{$count$}
+        \Let{$n$} length of $A$
+        \If{$n=1$}
+            \Ret $0$
+        \EndIf
+        \\
+        \Let{$mid$} $\floor{n/2}$
+        \Let{$left$} \F{Sum-Less-Than}{$A[1..mid]$}
+        \Let{$right$} \F{Sum-Less-Than}{$A[mid+1..n]$}
+        \\
+        \Let{$\_, count$} \F{Merge-Count}{$A[1..mid], A[mid+1..n], \lambda x: x+U-1$}
+        \Comment first pass: count
+        \Let{$A, \_$} \F{Merge-Count}{$A[1..mid], A[mid+1..n], \lambda x: x$}
+        \Comment second pass: merge
+        \\
+        \Ret $left+right+count$
+        \EndFunction
+        \\
+        \Function{Range-Sum}{$A, L, U$}{$count$}
+        \Let{$S$} cumulative sum of $A$
+        \Let{$c_1$} \F{Sum-Less-Than}{$S, U$}
+        \Let{$c_2$} \F{Sum-Less-Than}{$S, L-1$}
+        \Ret $c_1 - c_2$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Draw the Skyline!}
+
+三条斜率不同的直线($y=a_ix+b+i, i=1,2,3, a_1< a_2<a_3$), 其中斜率最大者与最小者可能挡住中间的一条直线, 当
+\begin{align*}
+    \begin{vmatrix}
+        a_1 & b_1 & 1 \\
+        a_2 & b_2 & 1 \\
+        a_3 & b_3 & 1
+    \end{vmatrix} & > 0
+\end{align*}
+
+上式可推广到斜率可能相同的情况, 只需要斜率相同的直线按照截距从大到小排序.
+
+按照斜率和截距排序后, 使用动态规划求解, 令 $V_k$ 表示只考虑前 $k$ 条直线时可见的直线集合, 那么加入直线 $l_{k+1}$ 后, 它可能挡住 $V_k$ 中斜率最大的若干直线, 以此更新 $V_{k+1}$.
+
+\begin{algorithm}[H]
+    \caption{Draw the Skyline}
+    \begin{algorithmic}
+        \Function{Hidden}{$l_1, l_2, l_3$}{\textbf{bool}}
+        \Let{$a_i, b_i$} slope and intercept of $l_i$, $i=1,2,3$
+        \Ret $\begin{vmatrix}
+                a_1 & b_1 & 1 \\
+                a_2 & b_2 & 1 \\
+                a_3 & b_3 & 1
+            \end{vmatrix} > 0$
+        \EndFunction
+        \\
+        \Function{Draw-Skyline}{$L$}{$V$}
+        \State sort $L$ by slope and intercept, i.e. $key := (a_i, -b_i)$
+        \Let{$V$} empty list
+        \Comment visible ones in first $k$ lines        
+        \For{$l_k: y=a_kx+b_k$}{$L$}
+            \While{$V$ has at least two lines}
+                \Let{$l_1, l_2$} last and second last line in $V$
+                \If{\F{Hidden}{$l_2, l_1, l_k$}}
+                    \State remove $l_1$ from $V$
+                \Else                    
+                    \State break
+                \EndIf
+            \EndWhile
+            \State append $l_k$ to $V$
+        \EndFor
+        \Ret $V$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Local Minima of A Chessboard}
+
+\begin{algorithm}[H]
+    \caption{Local Minima of A Chessboard}
+    \begin{algorithmic}
+        \Function{Local-Minima}{$M$}{$minima$}            
+            \State assume $M$ is a $m \times n$ matrix
+            \If{$n=1$}
+                \Ret minimum of array $M[1..m][1]$
+            \EndIf
+            \Let{$mid$} $\floor{n/2}$
+            \Let{$i$} index of the minimum of array $M[1..m][mid]$
+            \If{$mid-1> 0$ \textbf{and} $M[i][mid-1]<M[i][mid]$}
+                \Ret \F{Local-Minima}{$M[1..m][1..mid-1]^T$}                
+            \ElseIf{$mid+1 \le n$ \textbf{and} $M[i][mid+1]<M[i][mid]$}
+                \Ret \F{Local-Minima}{$M[1..m][mid+1..n]^T$}
+            \Else
+                \Ret $M[i][mid]$
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+在递归前对矩阵进行转置, 这让时间复杂度从 $O(m\log n)$ 降到了 $O(m + n)$.
+转置操作可以是 $O(1)$ 的, 只需要维护一个标记, 并且根据标记对索引操作进行重定向即可.
+
+\end{document}
+
