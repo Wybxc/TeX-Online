@@ -1,0 +1,268 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+\usepackage{float}
+\usepackage{booktabs}
+% \special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{算法设计与分析~作业3}
+\author{庄嘉毅}
+\date{Feburary 2023}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\DeclareMathOperator{\argmin}{argmin}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\def\phantomeq{\mathrel{\phantom{=}}}
+
+\algsetblockdefx[Function]{Function}{EndFunction}{}{}[3]{\textbf{function} \textsc{#1}(#2) \textbf{returns} #3}{\textbf{end function}}
+\algsetblockdefx[Persistent]{Persistent}{EndPersistent}{}{}{\textbf{persistent:}}{}
+\algsetblockdefx[Require]{Require}{EndRequire}{}{}{\textbf{require:}}{}
+\algsetblockdefx[For]{For}{EndFor}{}{}[2]{\textbf{for} #1 \textbf{in} #2 \textbf{do}}{\textbf{end for}}
+\algsetblockdefx[If]{If}{EndIf}{}{}[1]{\textbf{if} #1 \textbf{then}}{\textbf{end if}}
+\algcblockdefx[If]{If}{Else}{EndIf}{\textbf{else}}{\textbf{end if}}
+\algcblockdefx[If]{If}{ElseIf}{EndIf}[1]{\textbf{else if} #1}{\textbf{end if}}
+\algsetblockdefx[While]{While}{EndWhile}{}{}[1]{\textbf{while} #1 \textbf{do}}{\textbf{end while}}
+\newcommand{\Let}[1]{\State #1 $\gets$}
+\newcommand{\F}[2]{\textsc{#1}(#2)}
+\newcommand{\Ret}[1]{\State \textbf{return} #1}
+\newcommand{\Nil}{\textbf{nil}}
+
+\begin{document}
+
+\maketitle
+
+\section{Commuting to Maximize Profit}
+
+\paragraph*{(1)} 考虑这个例子:
+
+\begin{table}[H]
+    \begin{tabular}{@{}clllll@{}}
+        \toprule
+        Week     & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{3} & \multicolumn{1}{c}{4} & \multicolumn{1}{c}{5} \\ \midrule
+        Beijing  & 500                   & 0                     & 500                   & 0                     & $\cdots$              \\ \midrule
+        Shanghai & 0                     & 500                   & 0                     & 500                   & $\cdots$              \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+按照贪心策略, 收入与车费抵消, 总收入为 500 元.
+
+如果一直在北京, 则总收入大于 500 元, 因此贪心策略不是最优策略.
+
+\paragraph*{(2)} 使用动态规划, 记第 $i$ 周在北京的最大收入为 $f(i)$, 在上海的最大收入为 $g(i)$, 则有:
+\begin{align*}
+    f(i) & = \begin{cases}
+                 a_1,                                & i = 1   \\
+                 a_i + \max\{f(i-1), g(i-1) - 500\}, & i \ge 2
+             \end{cases} \\
+    g(i) & = \begin{cases}
+                 b_1,                                & i = 1   \\
+                 b_i + \max\{f(i-1) - 500, g(i-1)\}, & i \ge 2
+             \end{cases}
+\end{align*}
+
+\begin{algorithm}[H]
+    \caption{Commuting to Maximize Profit}
+    \begin{algorithmic}
+        \Function{Max-Profit}{$\{a_i\}, \{b_i\}, n$}{$maximum$}
+        \Let{$f, g$} $a_1, 0$
+        \For{$i$}{$2,3,\ldots,n$}
+            \Let{$f'$} $a_i + \max\{f, g - 500\}$
+            \Let{$g'$} $b_i + \max\{f - 500, g\}$
+            \Let{$f, g$} $f', g'$
+        \EndFor
+        \Ret $f$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度为 $O(n)$.
+
+\section{Processing Sheet Metal} 使用动态规划, 记 $v(a, b)$ 为 $a\times b$ 大小的钢板不经过切割能卖出的最大价值, $f(a, b)$ 为 $a\times b$ 大小的钢板切割后能卖出的最大价值, 则有:
+\begin{align*}
+    v(a, b) & = \begin{cases}
+                    v_i, & a = x_i \text{ and } b = y_i \\
+                    0,   & \text{otherwise}
+                \end{cases}                                                                                                               \\
+    f(a, b) & = \begin{cases}
+                    0,                                                                                                                     & a = 0 \text{ or } b = 0  \\
+                    \max\{\max\limits_{1 \le i \le a} (f(i, b) + f(a-i, b)), \max\limits_{1 \le j \le b} (f(a, j) + f(a, b-j)), v(a, b)\}, & a > 0 \text{ and } b > 0
+                \end{cases}
+\end{align*}
+
+使用备忘录法, 定义搜索函数:
+
+\begin{algorithm}[H]
+    \caption{Processing Sheet Metal - Dynamic Programming}
+    \begin{algorithmic}
+        \Function{Max-Value-DP}{$a, b, f, c$}{$(v, f, c)$}
+        \If{$f[a][b] \ge 0$}
+            \Ret $(f[a][b], f, c)$
+        \EndIf
+        \\
+
+        \Let{$v$} $0$
+        \If{$\exists i$ s.t. $a = x_i$ and $b = y_i$}
+            \Let{$v$} $v_i$
+            \Let{$c[a][b]$} ``no cut''
+        \EndIf
+        \For{$i$}{$1, 2, \ldots, a$}
+            \Let{$(v', f, c)$} \F{Max-Value-DP}{$i, b, f, c$}
+            \Let{$(v'', f, c)$} \F{Max-Value-DP}{$a-i, b, f, c$}
+            \If{$v' + v'' > v$}
+                \Let{$v$} $v' + v''$
+                \Let{$c[a][b]$} ``vertical cut at $i$''
+            \EndIf
+        \EndFor
+        \For{$j$}{$1, 2, \ldots, b$}
+            \Let{$(v', f, c)$} \F{Max-Value-DP}{$a, j, f, c$}
+            \Let{$(v'', f, c)$} \F{Max-Value-DP}{$a, b-j, f, c$}
+            \If{$v' + v'' > v$}
+                \Let{$v$} $v' + v''$
+                \Let{$c[a][b]$} ``horizontal cut at $j$''
+            \EndIf
+        \EndFor
+        \\
+        \Ret $(v, f, c)$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+其中 $f$ 为备忘录, $c$ 为搜索过程中的切割方案.
+
+根据 $c$ 可以得到切割方案:
+
+\begin{algorithm}[H]
+    \caption{Processing Sheet Metal}
+    \begin{algorithmic}
+        \Function{Print-Path}{$a, b, c$}{$path$}
+        \If{$c[a][b] = ``no cut''$}
+            \Ret \{\}
+        \ElseIf{$c[a][b] = ``vertical cut at $i$''$}
+            \Let{$path$} ``vertical cut $a\times b$ sheet at $i$''
+            \Let{$path_1$} \F{Print-Path}{$i, b, c$}
+            \Let{$path_2$} \F{Print-Path}{$a-i, b, c$}
+            \Ret concatenate $path$ with $path_1$ and $path_2$
+        \ElseIf{$c[a][b] = ``horizontal cut at $j$''$}
+            \Let{$path$} ``horizontal cut $a\times b$ sheet at $j$''
+            \Let{$path_1$} \F{Print-Path}{$a, j, c$}
+            \Let{$path_2$} \F{Print-Path}{$a, b-j, c$}
+            \Ret concatenate $path$ with $path_1$ and $path_2$
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度为 $O(A\times B)$.
+
+\section{Investing in the Stock}
+
+使用动态规划, 记在第 1 到 $i$ 天中, 完成 $j$ 次交易时, 最大的收益为 $f(i, j)$, 则有:
+\begin{align*}
+    f(i, j) & = \begin{cases}
+                    0,                                                                            & j = 0   \\
+                    0,                                                                            & i \le j \\
+                    \max\{f(i-1, j), \max\limits_{1< l< i}\left\{f(l-1, j-1)+p(i)-p(l)\right\}\}, & i>j>0
+                \end{cases}
+\end{align*}
+
+其中, $f(i,j)=f(i-1, j)$ 表示第 $i$ 天没有交易, $f(i,j)=f(l-1, j-1)+p(i)-p(l)$ 表示最后一次交易是第 $i$ 天卖出, 第 $l$ 天买入.
+
+\begin{algorithm}[H]
+    \caption{Investing in the Stock}
+    \begin{algorithmic}
+        \Function{Max-Profit}{$\{p_i\}, k$}{$f$}
+        \Let{$f$} $n\times k$ matrix full of 0
+        \For{$i$}{$2, \ldots, n$}
+            \For{$j$}{$1, 2, \ldots, \min\{i-1, k\}$}
+                \Let{$f[i][j]$} $f[i-1][j]$
+                \For{$l$}{$2, \ldots, i-1$}
+                    \Let{$f[i][j]$} $\max\{f[i][j], f[l-1][j-1] + p[i] - p[l]\}$
+                \EndFor
+            \EndFor
+        \EndFor
+        \Ret maximum value in $f[n][1], f[n][2], \ldots, f[n][k]$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度为 $O(n^2 k)$.
+
+\section{Number of Shortest Paths}
+
+使用 Bellman-Ford 算法的修改版, 记 $d_k[i]$ 为源点 $s$ 到顶点 $i$ 不超过 $k$ 条边的最短路径长度, $c_k[i]$ 为源点 $s$ 到顶点 $i$ 不超过 $k$ 条边的最短路径条数, 则有:
+\begin{align*}
+    d_k[i] & = \min\{d_{k-1}[i], \min\limits_{e=(j, i)\in E}\left\{d_{k-1}[j] + c_e\right\}\}                  \\
+    c_k[i] & = \sum_{e=(j,i)\in E\atop d_k[i]=d_{k-1}[j]+c_e} c_{k-1}[i] + \begin{cases}
+                                                                               0,          & d_k[i] \ne d_{k-1}[i] \\
+                                                                               c_{k-1}[i], & d_k[i] = d_{k-1}[i]
+                                                                           \end{cases}
+\end{align*}
+
+\begin{algorithm}[H]
+    \caption{Number of Shortest Paths}
+    \begin{algorithmic}
+        \Function{Shortest-Paths}{$s, t, n, E$}{$count$}
+        \Let{$d$} array of size $n$ full of $\infty$
+        \Let{$c$} array of size $n$ full of 0
+        \Let{$d[s]$} 0
+        \Let{$c[s]$} 1
+        \For{$k$}{$1, 2, \ldots, n-1$}
+            \For{$e=(i, j)$}{$E$}
+                \If{$d[j] > d[i] + c_e$}
+                    \Let{$d[j]$} $d[i] + c_e$
+                    \Let{$c[j]$} $c[i]$
+                \ElseIf{$d[j] = d[i] + c_e$}
+                    \Let{$c[j]$} $c[j] + c[i]$
+                \EndIf
+            \EndFor
+        \EndFor
+        \Ret $c[t]$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\section{Running a Sales Company}
+
+使用动态规划, 记 $f(i, j)$ 为在第 $i$ 月储存 $j$ 根原木时, 最小的成本, 则有:
+\begin{align*}
+    f(1, j) & = Cj+K                                                             \\
+    f(i, j) & = Cj+\min\{f(i-1, j+d_i), \min\limits_{1\le j'\le S}f(i-1, j')+K\}
+\end{align*}
+
+\begin{algorithm}[H]
+    \caption{Running a Sales Company}
+    \begin{algorithmic}
+        \Function{Min-Cost}{$\{d_i\}, C, K, S$}{$f$}
+        \Let{$f$} empty array of $0..S$
+        \For{$j$}{$0, 1, 2, \ldots, S$}
+            \Let{$f[j]$} $Cj+K$
+        \EndFor
+        \Let{$m$} $f[0]$
+        \Comment $m$ is the minimum cost of the previous month
+        \For{$i$}{$2, 3, \ldots, n$}
+            \Let{$m'$} $\infty$
+            \Comment $m'$ is the minimum cost of the current month
+            \For{$j$}{$0, 1, 2, \ldots, S$}
+                \Let{$f[j]$} $Cj+K+m$
+                \If{$j+d_i \le S$ \textbf{and} $f[j+d_i] < K+m$}
+                    \Let{$f[j]$} $Cj+f[j+d_i]$
+                \EndIf
+                \If{$f[j] < m'$}
+                    \Let{$m'$} $f[j]$
+                \EndIf
+            \EndFor
+            \Let{$m$} $m'$
+        \EndFor
+        \Ret $f[0]$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
