@@ -1,0 +1,58 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{geometry}
+\usepackage{algorithm, algorithmicx, algpseudocode}
+\usepackage{float}
+\usepackage{booktabs}
+% \special{dvipdfmx:config z 0} % delete this when release
+
+\geometry{a4paper,scale=0.8}
+
+\title{算法设计与分析~作业3}
+\author{庄嘉毅}
+\date{Feburary 2023}
+
+\def\QED{\hfill $\square$}
+\def\st{\textrm{s.t.}\,}
+\DeclareMathOperator{\e}{e}
+\DeclareMathOperator{\argmin}{argmin}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\def\phantomeq{\mathrel{\phantom{=}}}
+
+\algsetblockdefx[Function]{Function}{EndFunction}{}{}[3]{\textbf{function} \textsc{#1}(#2) \textbf{returns} #3}{\textbf{end function}}
+\algsetblockdefx[Persistent]{Persistent}{EndPersistent}{}{}{\textbf{persistent:}}{}
+\algsetblockdefx[Require]{Require}{EndRequire}{}{}{\textbf{require:}}{}
+\algsetblockdefx[For]{For}{EndFor}{}{}[2]{\textbf{for} #1 \textbf{in} #2 \textbf{do}}{\textbf{end for}}
+\algsetblockdefx[If]{If}{EndIf}{}{}[1]{\textbf{if} #1 \textbf{then}}{\textbf{end if}}
+\algcblockdefx[If]{If}{Else}{EndIf}{\textbf{else}}{\textbf{end if}}
+\algcblockdefx[If]{If}{ElseIf}{EndIf}[1]{\textbf{else if} #1}{\textbf{end if}}
+\algsetblockdefx[While]{While}{EndWhile}{}{}[1]{\textbf{while} #1 \textbf{do}}{\textbf{end while}}
+\newcommand{\Let}[1]{\State #1 $\gets$}
+\newcommand{\F}[2]{\textsc{#1}(#2)}
+\newcommand{\Ret}[1]{\State \textbf{return} #1}
+\newcommand{\Nil}{\textbf{nil}}
+
+\begin{document}
+
+\maketitle
+
+\section{Occupied Scheduling}
+
+贪心策略: 每次选择能够击中最多尚未击中的时段的事件.
+
+证明: 对于一个最优策略 $S$, 取其中的一个事件 $t_i$, 那么 $S-\{t_i\}$ 是当时段集为所有未被 $t_i$ 击中的时段时, 取得的最优解, 即问题满足最优子结构的性质.
+
+若 $S$ 不包含击中最多时段的事件 $t_k$, 那么考虑被 $t_k$ 击中的时段 $[s_{i_1}, f_{i_1}], [s_{i_2}, f_{i_2}], \ldots$, $S$ 中存在一个或多个事件击中这些时段, 记这些事件的集合为 $A$. 考虑策略 $S'=S-A\cup \{t_k\}$, 那么 $S'$ 也能覆盖所有的时段, 并且 $|S'|\le |S|$, 因此一定存在一个最优策略包含事件 $t_k$.
+
+\begin{algorithm}[H]
+    \caption{Occupied Scheduling}
+    \begin{algorithmic}
+        \Function{Occupied-Scheduling}{$\{[s_i, f_i]\}, \{t_i\}$}
+        \State $S \gets \emptyset$
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\end{document}
