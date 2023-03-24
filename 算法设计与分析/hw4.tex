@@ -8,7 +8,7 @@
 
 \geometry{a4paper,scale=0.8}
 
-\title{算法设计与分析~作业3}
+\title{算法设计与分析~作业4}
 \author{庄嘉毅}
 \date{Feburary 2023}
 
@@ -27,7 +27,7 @@
 \algsetblockdefx[For]{For}{EndFor}{}{}[2]{\textbf{for} #1 \textbf{in} #2 \textbf{do}}{\textbf{end for}}
 \algsetblockdefx[If]{If}{EndIf}{}{}[1]{\textbf{if} #1 \textbf{then}}{\textbf{end if}}
 \algcblockdefx[If]{If}{Else}{EndIf}{\textbf{else}}{\textbf{end if}}
-\algcblockdefx[If]{If}{ElseIf}{EndIf}[1]{\textbf{else if} #1}{\textbf{end if}}
+\algcblockdefx[If]{If}{ElseIf}{EndIf}[1]{\textbf{else if} #1 \textbf{then}}{\textbf{end if}}
 \algsetblockdefx[While]{While}{EndWhile}{}{}[1]{\textbf{while} #1 \textbf{do}}{\textbf{end while}}
 \newcommand{\Let}[1]{\State #1 $\gets$}
 \newcommand{\F}[2]{\textsc{#1}(#2)}
@@ -49,10 +49,88 @@
 \begin{algorithm}[H]
     \caption{Occupied Scheduling}
     \begin{algorithmic}
-        \Function{Occupied-Scheduling}{$\{[s_i, f_i]\}, \{t_i\}$}
-        \State $S \gets \emptyset$
+        \Function{Occupied-Scheduling}{$\{[s_i, f_i]\}_m, \{t_i\}_n$}{$S$}
+        \Let{$S$} $\varnothing$
+        \Let{$T$} $\{[s_i, f_i]\}_m$
+        \While{$T\neq \varnothing$}
+            \Let{$t_k$} the event that hits the most time intervals in $T$
+            \Let{$S$} $S\cup \{t_k\}$
+            \Let{$T$} $T-\{[s_i, f_i]:t_k\in[s_i, f_i]\}$
+        \EndWhile
+        \Ret{$S$}
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
+
+时间复杂度: $O(nm^2)$.
+
+\section{Bottleneck of Spanning Trees}
+
+\paragraph*{(1)} 瓶颈生成树不一定是最小生成树. 若一个图的最大权边刚好为图的一个桥, 那么这个图的所有生成树都是瓶颈生成树, 而不一定所有的生成树都是最小生成树.
+
+\paragraph*{(2)} 最小生成树一定是瓶颈生成树.
+
+证明: 假设图 $G$ 的最小生成树 $T$ 不是瓶颈生成树, 那么存在一棵瓶颈生成树 $T'$, 其中每一条边的权值均小于 $T$ 中最大的边权. 记 $T$ 的最大权边为 $e$, $T-\{e\}$ 构成两个连通集, 这两个连通集在 $T'$ 中一定有边相连, 记其中一条为 $e'$, 那么考虑 $T''=T-\{e\}\cup\{e'\}$, 其总边权小于 $T$, 与 $T$ 是最小生成树矛盾.
+
+\section{Minimum Spanning k-Forest}
+
+\paragraph*{(1)} 证明: 任取 $j$-划分 $\Pi$, 记它的跨划分最小权边为 $e$, 再取 $G$ 的一个最小生成 $k$-森林 $F$, 若 $e\in F$, 则结论已成立, 否则 $e\notin F$, 考察 $F\cup \{e\}$, 它可能是一个 $(k-1)$-森林, 或者其中带有一个圈.
+
+由鸽笼原理, 因为 $j>k$, 必存在两个顶点 $u, v$ 在 $F$ 的同一个分支中, 但在 $\Pi$ 中属于不同的集合. 因此, $F$ 中一定存在至少一条边是 $\Pi$ 的跨划分边(位于 $(u, v)$的路径上), 记其中一条为 $e_1$.
+
+若 $F\cup \{e\}$ 是一个 $(k-1)$-森林, 考虑 $F_1=F-e_1\cup\{e\}$, 易知 $F_1$ 是 $k$-森林, 并且由于 $e_1$ 是 $\Pi$ 的跨划分边, 所以其边权不小于 $e$ 的边权, 因此 $F_1$ 的总边权不大于 $F$ 的总边权, 因此 $F_1$ 也是最小生成 $k$-森林, 并且包含 $e$.
+
+若 $F\cup \{e\}$ 带有一个圈, 考察这个圈上的其他边, 由于 $e$ 跨划分, 因此圈上一定包含另一条跨划分的边 $e_2$, 其边权不小于 $e$, 同样可构造 $F_2=F-e_2\cup\{e\}$ 是包含 $e$ 的最小生成 $k$-森林.
+
+\paragraph*{(2)} 仿照 Kruskal 算法, 初始时构造 $|V|$ 个单顶点集合, 这可以视作一个 $|V|$-划分, 或者 $|V|$-森林. 每次取一条权值最小的跨划分边, 将其加入到森林中, 重复这一操作直到得到 $k$-森林为止.
+
+根据 (1) 中的归纳构造, 每一步得到的森林都是某个最小生成 $k$-森林的子集, 因此最终得到的森林一定是最小生成 $k$-森林.
+
+\begin{algorithm}[H]
+    \caption{Minimum Spanning k-Forest}
+    \begin{algorithmic}
+        \Function{MSF}{$G=(V, E)$}{$F$}
+        \Let{$F$} set of single vertex sets of $V$
+        \For{$i$}{$1, 2, \ldots, |V|-k$}
+            \Let{$e$} the minimum weight edge that crosses the partition
+            \State add $e$ to $F$
+        \EndFor
+        \Ret{$F$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+使用并查集维护森林, 并对边进行预处理排序, 时间复杂度为 $O(|E|\log |E|+|V|\alpha(|V|))$.
+
+\section{Clock Tree Synthesis}
+
+注意到两个事实: (1) 无偏时钟树的完全子树也是无偏的. (2) 在最小无偏化操作中, 在根节点出发点两条边中, 至多增加一条边的边权(否则两条边权均减去增加量的最小值, 结果仍然是无偏的).
+
+因此可以递归地进行计算, 先将子树调整为无偏的, 再调整根节点出发的一条边的边权, 使得两棵子树同步.
+
+\begin{algorithm}[H]
+    \caption{Clock Tree Synthesis}
+    \begin{algorithmic}
+        \Function{CTS}{$T$}{$l$}
+        \If{$T$ is a leaf}
+            \Ret{0}
+        \EndIf
+        \Let{$T_1, T_2$} the children of $T$
+        \Let{$l_1, l_2$} the lengths of the edges from $T$ to its children
+        \Let{$w_1$} \F{CTS}{$T_1$}
+        \Let{$w_2$} \F{CTS}{$T_2$}
+        \If{$l_1+w_1<l_2+w_2$}
+            \State increase $l_1$ by $l_2+w_2-l_1-w_1$
+            \Ret{$l_2+w_2$}
+        \ElseIf{$l_1+w_1>l_2+w_2$}
+            \State increase $l_2$ by $l_1+w_1-l_2-w_2$
+            \Ret{$l_1+w_1$}
+        \EndIf
+        \Ret{$l_1+w_1$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+时间复杂度为 $O(n)$.
 
 \end{document}
